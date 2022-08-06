@@ -1,5 +1,5 @@
 import style from './layout.module.less'
-import { requestFullScreen, exitFullScreen, isFullscreenElement } from "../hooks/util";
+import { requestFullScreen, exitFullScreen, isFullscreenElement } from "../../hooks/util";
 import Logo from './imgs/Logo.png'
 import {
   MenuFoldOutlined,

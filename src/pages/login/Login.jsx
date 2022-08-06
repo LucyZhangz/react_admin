@@ -1,10 +1,10 @@
 import React,{useEffect} from 'react'
 import {createRef} from 'react-dom'
-import Style from '../components/index.module.css'
+import Style from './login.module.css'
 import { Card } from 'antd';
 import { Button, Form, Input } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { userlogin } from '../api/login'
+import { userlogin } from '../../api/login'
 export default function login() {
   const [form] = Form.useForm();
   // 获取input数值
