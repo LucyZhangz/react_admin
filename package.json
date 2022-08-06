@@ -9,8 +9,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/pro-components": "^1.1.15",
+    "@vitejs/plugin-vue": "^3.0.1",
+    "antd": "^4.22.3",
+    "axios": "^0.27.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-error-overlay": "^6.0.9",
+    "react-router": "^6.3.0",
+    "react-router-config": "^5.1.1",
+    "react-router-dom": "^6.3.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.15",

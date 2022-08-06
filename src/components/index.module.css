@@ -1,0 +1,17 @@
+.bg{
+    background-image: url('../views/images/bg.jpg');
+    width:100vw;
+    height:100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.titleColor{
+    font-size: 30px;
+    color:#1AA094;
+    text-align: center;
+}
+.loginButton {
+    width: 100%;
+  }
