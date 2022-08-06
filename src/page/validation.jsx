@@ -16,7 +16,8 @@ success(){
   render(){
      return(
       <div>
-        <ReactSimpleVerify ref={this.verify} success={ this.success.bind(this) }/>
+        
+        <ReactSimpleVerify style={{ background:'red' }} ref={this.verify} success={ this.success.bind(this) }/>
       </div>
      )
   }
