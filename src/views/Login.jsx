@@ -11,46 +11,14 @@ export default function login() {
 	const myRef = React.useRef()
   const onFinish = (values) => {
     console.log('Finish:', values);
-  };
     userlogin({
-    'captcha': '',
-    'createId': '',
-    'createIds': [],
-    'createTime': '',
-    'createWhere': 0,
-    'deleted': 0,
-    'deptId':'',
-    'deptName':'',
-    'deptNo':'' ,
-    'education': 0,
-    'email': '',
-    'endTime':'',
-    'id':'',
-    'limit': 0,
-    'major': '',
-    "newPwd": "",
-    "nickName": "",
-    "oldPwd": "",
-    "page": 0,
-    "password": "",
-    "phone": "",
-    "profile": "",
-    "qualificationImg": "",
-    "realName": "",
-    "roleId": "",
-    "roleIds": [],
-    "salt": "",
-    "selfEvaluation": "",
-    "sex": 0,
-    "startTime": "",
-    "status": 0,
-    "university": "",
-    "updateId": "",
-    "updateTime": "",
-    "username": ""
-  }).then(res=>{
-    console.log(res);
-  })
+      username: values.username,
+      password: values.password,
+      captcha: values.captcha,
+    }).then(res=>{
+      console.log(res);
+    })
+  };
 //  function handleLogin(){
 //     console.log(myRef.current.value);
 //   }
@@ -67,7 +35,6 @@ export default function login() {
             name="username"
             
             rules={[{ required: true, message: 'Please input your username!' }]}
-            
           >
             <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" ref={myRef} />
           </Form.Item>
@@ -80,6 +47,17 @@ export default function login() {
               prefix={<LockOutlined className="site-form-item-icon" />}
               type="password"
               placeholder="Password"
+              ref={myRef}
+            />
+          </Form.Item>
+          <Form.Item
+            name="captcha"
+            rules={[{ required: true, message: 'Please input your captcha!'}]}
+          >
+            <Input
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              type="text"
+              placeholder="captcha"
               ref={myRef}
             />
           </Form.Item>
