@@ -1,0 +1,16 @@
+.logo {
+  height: 32px;
+  margin: 16px;
+  color: white;
+}
+.LogoFont {
+  font-size: 16px;
+  position: relative;
+  left: 35px;
+}
+.LogoImg {
+  width: 35px;
+  height: 32px;
+  position: relative;
+  left: 6px;
+}

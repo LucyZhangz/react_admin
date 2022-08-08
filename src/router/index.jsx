@@ -7,10 +7,10 @@ import Layout from "../pages/layout/Layout";
 const routes = () => (
   <Router>
     <Routes>
-      <Route path="/" element={<App />}>
-        <Route path="/not" element={<NotFound />}></Route>
-        <Route path="/layout" element={<Layout />}></Route>
+      <Route path="/" element={<Layout />}>
+          <Route path="/home" element={<Home />}></Route>
       </Route>
+      <Route path="/not" element={<NotFound />}></Route>
       <Route path="/login" element={<Login />}></Route>
       <Route path="/home" element={<Home />}></Route>
     </Routes>

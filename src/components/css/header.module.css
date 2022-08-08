@@ -1,17 +1,12 @@
-
-.logo {
-  height: 32px;
-  margin: 16px;
-  color: white;
+.trigger {
+  padding: 0 24px;
+  font-size: 18px;
+  line-height: 64px;
+  cursor: pointer;
+  transition: color 0.3s;
 }
-.LogoFont {
-  font-size: 16px;
-  position: relative;
-  left: 35px;
-}
-
-.asideStyle {
-  height: 100vh !important;
+.trigger:hover {
+  color: #1890ff;
 }
 .Reload {
   font-size: 18px;
@@ -31,10 +26,4 @@
 .Admin {
   position: relative;
   left: 990px;
-}
-.LogoImg {
-  width: 35px;
-  height: 32px;
-  position: relative;
-  left: 6px;
 }
