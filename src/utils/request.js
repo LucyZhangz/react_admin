@@ -1,16 +1,22 @@
 import axios from 'axios'
+// 导入进度条插件
+import useNProgress from "../hook/useNprogress";
+const NProgress = useNProgress();
+
 const service = axios.create({
-    baseURL: 'http://127.0.0.1:5173',
-    // timeout: 1000 * 60 * 60,
+    baseURL: 'http://192.168.0.253:8091',
+    timeout: 1000 * 60 * 60,
 })
 // 添加请求拦截器
 service.interceptors.request.use(function (config) {
+    NProgress.start();
     console.log(config);
     // 在请求发送之前给headers设置token
     // console.log(localStorage.getItem('VUE_ADMIN_TOKEN'));
     if (!config.url.includes("/sys/user/login")) {
         // config.headers.authorization= localStorage.getItem('VUE_ADMIN_TOKEN')
         // 给请求头设置token
+        
     }
     return config;
 
@@ -18,19 +24,16 @@ service.interceptors.request.use(function (config) {
     return Promise.reject(error);
 });
 // 添加响应拦截器
-// service.interceptors.response.use(function (response) {
-//     // console.log(response.status);
-//     if (response.status == 200) {
-//         // Message({
-//         //     showClose: true,
-//         //     message: '登录成功',
-//         //     type: 'success'
-//         // });
-//     }
-//     // 对响应数据执行操作
-//     return response.data;
-// }, function (error) {
-//     // 对响应错误执行操作
-//     return Promise.reject(error);
-// });
+service.interceptors.response.use(function (response) {
+    // console.log(response.status);
+      // 关闭进度条
+    NProgress.done();
+    if (response.status == 0) {
+    }
+    // 对响应数据执行操作
+    return response.data;
+}, function (error) {
+    // 对响应错误执行操作
+    return Promise.reject(error);
+});
 export default service;
