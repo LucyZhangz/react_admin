@@ -4,6 +4,7 @@ const { Header } = Layout;
 import { connect } from "react-redux";
 import { Layout, Menu, Space, Dropdown } from "antd";
 import Bread from "../Bread";
+import {Route, useNavigate}from 'react-router-dom'
 import {
   requestFullScreen,
   exitFullScreen,
@@ -18,11 +19,12 @@ import {
   FullscreenExitOutlined,
   DownOutlined,
 } from "@ant-design/icons";
+import Basic  from "../../pages/basic/basic";
 function LayoutHeader(props) {
   const [FullPage, setFullPage] = useState(false);
 
   const [originResizeFunc, setOriginResizeFunc] = useState(null);
-
+  const navigate=useNavigate()
   // 定义进入全屏和退出全屏事件
   function useEffect() {
     props.getMenu();
@@ -47,45 +49,27 @@ function LayoutHeader(props) {
     // 用于反显状态
     setFullPage(isFullscreenElement());
   }
+  function handleClick(e){
+    navigate("/"+e.key)
+    console.log(e.key);
+  }
   // admin的下拉菜单里的内容
   const menu = (
     <Menu
+    onClick={handleClick}
       items={[
         {
-          key: "1",
-          label: (
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://www.antgroup.com"
-            >
-              基础资料
-            </a>
-          ),
+          key: "profile",
+          label:"基本资料",
         },
         {
-          key: "2",
-          label: (
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://www.aliyun.com"
-            >
-              更换密码
-            </a>
-          ),
+          key: "paddword",
+          label:'更换密码',
         },
         {
-          key: "3",
-          label: (
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://www.aliyun.com"
-            >
-              退出
-            </a>
-          ),
+          key: "login",
+          label: '退出'
+          
         },
       ]}
     />
@@ -135,7 +119,7 @@ function LayoutHeader(props) {
           </Space>
           {/* 管理员下拉菜单 */}
           <Space className={style.Admin}>
-            <Dropdown overlay={menu}>
+            <Dropdown overlay={menu} >
               <a onClick={(e) => e.preventDefault()}>
                 <Space>
                   admin
