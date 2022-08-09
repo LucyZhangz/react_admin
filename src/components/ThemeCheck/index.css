@@ -1,0 +1,15 @@
+:root {
+    --background-color: red;
+  }
+  :root.dark {
+    --background-color: black;
+  }
+  .app {
+    font-family: sans-serif;
+    text-align: center;
+  }
+  
+  .text {
+    color: var(--background-color);
+  }
+  

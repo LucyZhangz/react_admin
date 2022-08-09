@@ -1,18 +1,19 @@
 import React, { useEffect } from "react";
 import { createRef } from "react-dom";
 import Style from "./login.module.css";
-import { Card } from "antd";
 import leftBg from "./images/login-box-bg.svg";
 import { Button, Form, Input } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { userlogin } from "../../api/login";
+import { userlogin} from "../../api/login";
+import Theme from '../../components/ThemeCheck/Theme'
+import Switchtheme from '../../components/Switch/Switchtheme'
 export default function login() {
   const [form] = Form.useForm();
   // 获取input数值
   const myRef = React.useRef();
-  const onFinish = (values) => {
+  const onFinish =async(values) => {
     console.log("Finish:", values);
-    userlogin({
+     await userlogin({
       username: values.username,
       password: values.password,
       captcha: values.captcha,
@@ -20,16 +21,16 @@ export default function login() {
       console.log(res);
     });
   };
-  //  function handleLogin(){
-  //     console.log(myRef.current.value);
-  //   }
+  
   return (
     <div className={Style.loginContainer}>
+     <Switchtheme className={Style.antSwitch}/>
       <div className={Style.loginBox}>
         <div className={Style.leftBox}>
           <img src={leftBg} alt="" className={Style.loginImg} />
         </div>
         <div className={Style.rightBox}>
+       
           <div className={Style.loginForm}>
             <h1 className={Style.titleColor}>教务管理系统</h1>
             <Form
@@ -74,11 +75,14 @@ export default function login() {
                 <Input
                   prefix={<LockOutlined className="site-form-item-icon" />}
                   type="text"
+                  suffix={<img src='http://192.168.0.253:8091/sys/getVerify' className={Style.msg} alt=""/>}  
                   placeholder="captcha"
                   ref={myRef}
                   style={{ width: "380px", padding: "11px" }}
                 />
+                
               </Form.Item>
+            
               <Form.Item>
                 <Button
                   type="primary"
