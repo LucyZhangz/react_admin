@@ -1,6 +1,8 @@
 import React from "react";
 import { Col, Divider, Row, Card } from "antd";
 import Style from "./home.module.less";
+import { Route, Routes} from 'react-router-dom'
+
 export default function Home() {
   return (
     <Row gutter={20}>
@@ -10,6 +12,9 @@ export default function Home() {
             <p>Card content</p>
             <p>Card content</p>
             <p>Card content</p>
+           <Routes>
+       
+           </Routes>
           </Card>
         </div>
       </Col>

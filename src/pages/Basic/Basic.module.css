@@ -1,0 +1,23 @@
+.inputUser {
+  width: 500px !important;
+
+}
+.form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 600px
+    ;
+}
+:global(.ant-input-wrapper) {
+ 
+  height: 50px !important;
+  
+}
+:global(.ant-input-group-addon:first-child ){
+    width: 100px;
+    
+}
+:global(.ant-input-group .ant-input){
+    height: 50px !important;
+}
