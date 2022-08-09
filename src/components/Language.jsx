@@ -16,12 +16,12 @@ export default function language() {
                 {
                     label: '简体中文',
                     key: 'zh',
-                    flag: 'false'
+                   
                 },
                 {
                     label: 'English',
                     key: 'en',
-                    flag: 'true'
+                    
                 },
 
             ]}
