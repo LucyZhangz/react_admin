@@ -13,9 +13,9 @@ const routes = () => (
       <Route path="/" element={<Layout />}>
         <Route path="/" element={<Home />}></Route>
         <Route path="/profile" element={<Basic />}></Route>
-        <Route path="/paddword" element={<Changetpassword />}></Route>
+        <Route path="/password" element={<Changetpassword />}></Route>
         {/* <Route path="/menu" element={<Menu />}></Route> */}
-        <Route path="/Role" element={<RoleAdmin />}></Route>
+        <Route path="/role" element={<RoleAdmin />}></Route>
         {/* <Route path="/role" element={<RoleAdmin />}></Route> */}
         {/* <Route path="/department" element={<Department />}></Route> */}
         {/* <Route path="/staff" element={<Staff />}></Route> */}
