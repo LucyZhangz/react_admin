@@ -9,7 +9,6 @@ export default function NotFound() {
 
   }
   function goHome(){
-    // console.log(navigate);
     navigate('/')
   }
   return (
