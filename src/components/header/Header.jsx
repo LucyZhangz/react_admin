@@ -10,6 +10,7 @@ import {
   exitFullScreen,
   isFullscreenElement,
 } from "../../hooks/util";
+import Language from "../Language";
 import { createCollapseAction } from "../../store/actions/collaspe_action";
 import {
   MenuFoldOutlined,
@@ -22,7 +23,7 @@ import {
 import Basic  from "../../pages/basic/basic";
 function LayoutHeader(props) {
   const [FullPage, setFullPage] = useState(false);
-
+  
   const [originResizeFunc, setOriginResizeFunc] = useState(null);
   const navigate=useNavigate()
   // 定义进入全屏和退出全屏事件
@@ -94,6 +95,7 @@ function LayoutHeader(props) {
           )}
           {/* 面包屑 */}
           <Bread />
+          <Language />
         </div>
         <div className={style.headerRight}>
           {/* 刷新的icon图标 */}
