@@ -1,7 +1,17 @@
 import React from "react";
+import {useNavigate } from 'react-router-dom'
 import Style from "./notFound.module.css";
-export default function NotFound() {
 
+export default function NotFound() {
+  const navigate = useNavigate();
+  function goBack(){
+    navigate(-1)
+
+  }
+  function goHome(){
+    // console.log(navigate);
+    navigate('/')
+  }
   return (
     <>
       <div className={Style.notfound}>
@@ -12,10 +22,10 @@ export default function NotFound() {
           loop
           autoplay
         ></lottie-player>
-        <button className={Style.btn}>
+        <button className={Style.btn} onClick={goBack}>
            返回上一页
         </button>
-        <button className={Style.btn}>
+        <button className={Style.btn} onClick={goHome}>
           返回首页
         </button>
        
