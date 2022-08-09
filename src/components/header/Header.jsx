@@ -3,6 +3,7 @@ import style from "./header.module.less";
 const { Header } = Layout;
 import { connect } from "react-redux";
 import { Layout, Menu, Space, Dropdown } from "antd";
+import Bread from "../Bread";
 import {
   requestFullScreen,
   exitFullScreen,
@@ -96,47 +97,54 @@ function LayoutHeader(props) {
           padding: 0,
           background: "#fff",
         }}
+        className={style.Header}
       >
-        {/* 收缩功能 */}
-        {React.createElement(
-          props.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-          {
-            className: style.trigger,
-            onClick: () => handlecollapse(),
-          }
-        )}
-        {/* 刷新的icon图标 */}
-        <Space className={style.Reload}>
-          <UndoOutlined onClick={handleReload} />
-        </Space>
-        {/* 全屏的icon图标 */}
-        <Space className={style.FullPage} onClick={ChangeFullPage}>
-          {/* FullscreenOutlined FullscreenExitOutlined */}
-          {FullPage ? (
-            <FullscreenExitOutlined
-              onClick={() => {
-                exitFullScreen();
-              }}
-            />
-          ) : (
-            <FullscreenOutlined
-              onClick={() => {
-                requestFullScreen(document.body);
-              }}
-            />
+        <div className={style.headerLeft}>
+          {/* 收缩功能 */}
+          {React.createElement(
+            props.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+            {
+              className: style.trigger,
+              onClick: () => handlecollapse(),
+            }
           )}
-        </Space>
-        {/* 管理员下拉菜单 */}
-        <Space className={style.Admin}>
-          <Dropdown overlay={menu}>
-            <a onClick={(e) => e.preventDefault()}>
-              <Space>
-                admin
-                <DownOutlined />
-              </Space>
-            </a>
-          </Dropdown>
-        </Space>
+          {/* 面包屑 */}
+          <Bread />
+        </div>
+        <div className={style.headerRight}>
+          {/* 刷新的icon图标 */}
+          <Space className={style.Reload}>
+            <UndoOutlined onClick={handleReload} />
+          </Space>
+          {/* 全屏的icon图标 */}
+          <Space className={style.FullPage} onClick={ChangeFullPage}>
+            {/* FullscreenOutlined FullscreenExitOutlined */}
+            {FullPage ? (
+              <FullscreenExitOutlined
+                onClick={() => {
+                  exitFullScreen();
+                }}
+              />
+            ) : (
+              <FullscreenOutlined
+                onClick={() => {
+                  requestFullScreen(document.body);
+                }}
+              />
+            )}
+          </Space>
+          {/* 管理员下拉菜单 */}
+          <Space className={style.Admin}>
+            <Dropdown overlay={menu}>
+              <a onClick={(e) => e.preventDefault()}>
+                <Space>
+                  admin
+                  <DownOutlined />
+                </Space>
+              </a>
+            </Dropdown>
+          </Space>
+        </div>
       </Header>
     </div>
   );
