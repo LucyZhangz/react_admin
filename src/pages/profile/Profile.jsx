@@ -1,8 +1,7 @@
 
-
 import React, { useState } from 'react';
 const { Option } = Select;
-import appbasic from './Basic.module.css'
+import appbasic from './Profile.module.css'
 import { Switch, Radio, Input, Select, Space,Button } from 'antd';
 export default function Basic() {
     //状态框的onclick
