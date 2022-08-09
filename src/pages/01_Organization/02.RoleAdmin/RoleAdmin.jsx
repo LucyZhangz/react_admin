@@ -107,21 +107,28 @@ const App = () => {
 
     const defaultColumns = [
         {
-            title: 'name',
+            title: '角色名称',
             dataIndex: 'name',
-            width: '30%',
             editable: true,
         },
         {
-            title: 'age',
+            title: '创建时间',
             dataIndex: 'age',
         },
         {
-            title: 'address',
+            title: '更新时间',
+            dataIndex: 'age',
+        },
+        {
+            title: '状态',
+            dataIndex: 'age',
+        },
+        {
+            title: '描述',
             dataIndex: 'address',
         },
         {
-            title: 'operation',
+            title: '操作',
             dataIndex: 'operation',
             render: (_, record) =>
                 <span >

@@ -1,7 +1,5 @@
 import { Button, Form, Input, Popconfirm, Table, Tag, Pagination, Modal} from 'antd';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import style from './menu.module.less'
-import ModalBox from './ModalBox'
 const EditableContext = React.createContext(null);
 const EditableRow = ({ index, ...props }) => {
     const [form] = Form.useForm();
@@ -107,31 +105,42 @@ const App = () => {
 
     const defaultColumns = [
         {
-            title: 'name',
-            dataIndex: 'name',
-            width: '30%',
+            title: '菜单名称',
+            dataIndex: 'name',  
             editable: true,
         },
         {
-            title: 'age',
-            dataIndex: 'age',
+            title: 'url',
+            dataIndex: 'url',
         },
         {
-            title: 'address',
-            dataIndex: 'address',
+            title: '图标',
+            dataIndex: 'name',
         },
         {
-            title: 'operation',
+            title: '类型',
+            dataIndex: 'name',
+        },
+        {
+            title: '父级名称',
+            dataIndex: 'name',
+        },
+        {
+            title: '排序',
+            dataIndex: 'name',
+        },
+        {
+            title: '资源标识',
+            dataIndex: 'name',
+        },
+        {
+            title: '状态',
+            dataIndex: 'name',
+        },
+        
+        {
+            title: '操作',
             dataIndex: 'operation',
-            render: (_, record) =>
-                <span >
-
-                    <Tag color="#2db7f5" className={style.EditBtn} onClick={handleAdd}>编辑</Tag>
-
-                    <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.key)} className={style.DeleteBtn}>
-                        <Tag color="#f50" className={style.DeleteBtn}>删除</Tag>
-                    </Popconfirm>
-                </span>
         },
     ];
     const [handleModal, sethandleModal] = useState(false)
@@ -174,15 +183,6 @@ const App = () => {
     });
     return (
         <div>
-            <Button
-                onClick={handleAdd}
-                type="primary"
-                style={{
-                    marginBottom: 16,
-                }}
-            >
-                新增
-            </Button>
             <Table
                 components={components}
                 rowClassName={() => 'editable-row'}
@@ -192,11 +192,6 @@ const App = () => {
                 pagination={false}
             />
             <Pagination size="small" total={50} showSizeChanger showQuickJumper />
-
-            <Modal title="Basic Modal" visible={handleModal} footer={null} onCancel={handleClose}>
-                <ModalBox sethandleModal={sethandleModal} />
-            </Modal>
-
         </div>
     );
 };

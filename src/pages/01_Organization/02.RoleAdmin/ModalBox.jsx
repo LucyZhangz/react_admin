@@ -1,4 +1,5 @@
 import { Button, Form, Input,Switch,Tree  } from 'antd';
+import style from './roleAdmin.module.less'
 import React from 'react';
 const layout = {
   labelCol: {
@@ -85,7 +86,7 @@ const App = (props) => {
         <Input />
       </Form.Item>
       <Form.Item label="状态" valuePropName="checked">
-        <Switch />
+        <Switch className={style.SwichCheck} />
       </Form.Item>
       <Form.Item label='请选择权限'>
       <Tree
