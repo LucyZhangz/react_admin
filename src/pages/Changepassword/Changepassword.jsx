@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Checkbox, Form, Input } from "antd";
-import Style from "./Changetpassword.model.css";
+import Style from "./Changepassword.module.css";
 export default function Changetpassword() {
     const onFinish = (values) => {
         console.log("Success:", values);

@@ -19,7 +19,6 @@ import {
   FullscreenExitOutlined,
   DownOutlined,
 } from "@ant-design/icons";
-import Basic  from "../../pages/basic/basic";
 function LayoutHeader(props) {
   const [FullPage, setFullPage] = useState(false);
 

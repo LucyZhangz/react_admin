@@ -1,6 +1,6 @@
 import { Button, Form, Input, Popconfirm, Table, Tag, Pagination, Modal} from 'antd';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import style from './changecourse.module.less'
+import style from './ClassSchedule.module.less'
 import ModalBox from './ModalBox'
 const EditableContext = React.createContext(null);
 const EditableRow = ({ index, ...props }) => {
