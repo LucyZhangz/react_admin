@@ -1,8 +1,14 @@
-import { Button, Form, Input, Popconfirm, Table, Tag, Pagination, Modal} from 'antd';
+import { Button, Form, Input, Popconfirm, Table, Tag, Pagination, Modal, Tree, Select } from 'antd';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import style from './staff.module.less'
 import ModalBox from './ModalBox'
+import { CarryOutOutlined, FormOutlined } from '@ant-design/icons';
 const EditableContext = React.createContext(null);
+const { Option } = Select;
+// 下拉框搜索事件
+const handleChange = (value) => {
+    console.log(`selected ${value}`);
+};
 const EditableRow = ({ index, ...props }) => {
     const [form] = Form.useForm();
     return (
@@ -83,6 +89,97 @@ const EditableCell = ({
     return <td {...restProps}>{childNode}</td>;
 };
 
+// 树形控件
+const treeData = [
+    {
+        title: 'parent 1',
+        key: '0-0',
+        icon: <CarryOutOutlined />,
+        children: [
+            {
+                title: 'parent 1-0',
+                key: '0-0-0',
+                icon: <CarryOutOutlined />,
+                children: [
+                    {
+                        title: 'leaf',
+                        key: '0-0-0-0',
+                        icon: <CarryOutOutlined />,
+                    },
+                    {
+                        title: (
+                            <>
+                                <div>multiple line title</div>
+                                <div>multiple line title</div>
+                            </>
+                        ),
+                        key: '0-0-0-1',
+                        icon: <CarryOutOutlined />,
+                    },
+                    {
+                        title: 'leaf',
+                        key: '0-0-0-2',
+                        icon: <CarryOutOutlined />,
+                    },
+                ],
+            },
+            {
+                title: 'parent 1-1',
+                key: '0-0-1',
+                icon: <CarryOutOutlined />,
+                children: [
+                    {
+                        title: 'leaf',
+                        key: '0-0-1-0',
+                        icon: <CarryOutOutlined />,
+                    },
+                ],
+            },
+            {
+                title: 'parent 1-2',
+                key: '0-0-2',
+                icon: <CarryOutOutlined />,
+                children: [
+                    {
+                        title: 'leaf',
+                        key: '0-0-2-0',
+                        icon: <CarryOutOutlined />,
+                    },
+                    {
+                        title: 'leaf',
+                        key: '0-0-2-1',
+                        icon: <CarryOutOutlined />,
+                        switcherIcon: <FormOutlined />,
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        title: 'parent 2',
+        key: '0-1',
+        icon: <CarryOutOutlined />,
+        children: [
+            {
+                title: 'parent 2-0',
+                key: '0-1-0',
+                icon: <CarryOutOutlined />,
+                children: [
+                    {
+                        title: 'leaf',
+                        key: '0-1-0-0',
+                        icon: <CarryOutOutlined />,
+                    },
+                    {
+                        title: 'leaf',
+                        key: '0-1-0-1',
+                        icon: <CarryOutOutlined />,
+                    },
+                ],
+            },
+        ],
+    },
+];
 const App = () => {
     const [dataSource, setDataSource] = useState([
         {
@@ -107,18 +204,54 @@ const App = () => {
 
     const defaultColumns = [
         {
-            title: 'name',
+            title: '账号',
+            width: 100,
             dataIndex: 'name',
-            width: '30%',
-            editable: true,
+            key: 'name',
+            fixed: 'left',
         },
         {
-            title: 'age',
+            title: '手机号',
+            width: 100,
             dataIndex: 'age',
+            key: 'age',
+            fixed: 'left',
         },
         {
-            title: 'address',
+            title: '所属部门',
             dataIndex: 'address',
+            key: '1',
+            width: 150,
+        },
+        {
+            title: '真实姓名',
+            dataIndex: 'address',
+            key: '2',
+            width: 150,
+        },
+        {
+            title: '角色',
+            dataIndex: 'address',
+            key: '3',
+            width: 150,
+        },
+        {
+            title: '邮箱',
+            dataIndex: 'address',
+            key: '4',
+            width: 150,
+        },
+        {
+            title: '性别',
+            dataIndex: 'address',
+            key: '5',
+            width: 150,
+        },
+        {
+            title: '状态',
+            dataIndex: 'address',
+            key: '6',
+            width: 150,
         },
         {
             title: 'operation',
@@ -134,12 +267,21 @@ const App = () => {
                 </span>
         },
     ];
+    const data = [];
+    for (let i = 0; i < 100; i++) {
+        data.push({
+            key: i,
+            name: `Edrward ${i}`,
+            age: 32,
+            address: `London Park no. ${i}`,
+        });
+    }
     const [handleModal, sethandleModal] = useState(false)
     const handleAdd = () => {
         sethandleModal(true);
     };
-    
-    function handleClose(){
+
+    function handleClose() {
         sethandleModal(false);
     }
     const handleSave = (row) => {
@@ -173,25 +315,62 @@ const App = () => {
         };
     });
     return (
-        <div>
-            <Button
-                onClick={handleAdd}
-                type="primary"
-                style={{
-                    marginBottom: 16,
-                }}
-            >
-                新增
-            </Button>
-            <Table
-                components={components}
-                rowClassName={() => 'editable-row'}
-                bordered
-                dataSource={dataSource}
-                columns={columns}
-                pagination={false}
-            />
-            <Pagination size="small" total={50} showSizeChanger showQuickJumper />
+        <div className={style.MenuBox}>
+            <div className={style.Tree}>
+                <Tree
+                    showLine={true}
+                    defaultExpandedKeys={['0-0-0']}
+                    // onSelect={onSelect}
+                    treeData={treeData}
+                />
+            </div>
+            <div className={style.MenuTable}>
+                <div>
+                    <Input placeholder="Basic usage" style={{ width: '200px' }} />
+                    <Input placeholder="Basic usage" style={{ width: '200px' }} />
+                    <Input placeholder="Basic usage" style={{ width: '200px' }} />
+                    <Select
+                        defaultValue="lucy"
+                        style={{
+                            width: 120,
+                        }}
+                        onChange={handleChange}
+                    >
+                        <Option value="jack">Jack</Option>
+                        <Option value="lucy">Lucy</Option>
+                        <Option value="zll">
+                            zll
+                        </Option>
+                        <Option value="Yiminghe">yiminghe</Option>
+                    </Select>
+                       <Button type="primary" style={{position:'relative',left:'50px'}}>查询</Button>
+                    </div>
+                <Button
+                    onClick={handleAdd}
+                    type="primary"
+                    style={{
+                        marginBottom: 16,
+                        position:'relative',
+                        top:'10px',
+                       height:"25px",
+                       fontSize:'12px',
+                       textAlign:'center'
+                    }}
+                >
+                    新增
+                </Button>
+                <Table
+                    columns={columns}
+                    dataSource={data}
+                    scroll={{
+                        x: 1280,
+                        y: 300,
+                    }}
+                    pagination={false}
+                />
+                <Pagination size="small" total={50} showSizeChanger showQuickJumper />
+            </div>
+
 
             <Modal title="Basic Modal" visible={handleModal} footer={null} onCancel={handleClose}>
                 <ModalBox sethandleModal={sethandleModal} />
