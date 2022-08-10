@@ -1,204 +1,112 @@
-import { Button, Form, Input, Popconfirm, Table, Tag, Pagination, Modal} from 'antd';
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import style from './exampaper.module.less'
-import ModalBox from './ModalBox'
-const EditableContext = React.createContext(null);
-const EditableRow = ({ index, ...props }) => {
-    const [form] = Form.useForm();
-    return (
-        <Form form={form} component={false}>
-            <EditableContext.Provider value={form}>
-                <tr {...props} />
-            </EditableContext.Provider>
-        </Form>
-    );
-};
-const showTotal = (total) => `Total ${total} items`;
-const EditableCell = ({
-    title,
-    editable,
-    children,
-    dataIndex,
-    record,
-    handleSave,
-    ...restProps
-}) => {
-    const [editing, setEditing] = useState(false);
-    const inputRef = useRef(null);
-    const form = useContext(EditableContext);
-    useEffect(() => {
-        if (editing) {
-            inputRef.current.focus();
-        }
-    }, [editing]);
-
-    const toggleEdit = () => {
-        setEditing(!editing);
-        form.setFieldsValue({
-            [dataIndex]: record[dataIndex],
-        });
-    };
-
-    const save = async () => {
-        try {
-            const values = await form.validateFields();
-            toggleEdit();
-            handleSave({ ...record, ...values });
-        } catch (errInfo) {
-            console.log('Save failed:', errInfo);
-        }
-    };
-
-    let childNode = children;
-
-    if (editable) {
-        childNode = editing ? (
-            <Form.Item
-                style={{
-                    margin: 0,
-                }}
-                name={dataIndex}
-                rules={[
-                    {
-                        required: true,
-                        message: `${title} is required.`,
-                    },
-                ]}
-            >
-                <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-            </Form.Item>
-        ) : (
-            <div
-                className="editable-cell-value-wrap"
-                style={{
-                    paddingRight: 24,
-                }}
-                onClick={toggleEdit}
-            >
-                {children}
-            </div>
-        );
+import { Button, Table } from "antd";
+import React, { useEffect, useState } from "react";
+import { getExamPaperList } from "../../../api/testManage/examPaper";
+export default function ExamPaper() {
+    async function getList(){
+        let {data} = await getExamPaperList(); 
+        console.log(data);
+        // console.log(11);
     }
+    useEffect(()=>{
+        getList()
+        // console.log("@@@","111");
+    },[])
+  const columns = [
+    {
+      title: "试卷编号",
+      dataIndex: "createId",
+    },
+    {
+      title: "试卷名称",
+      dataIndex: "testName",
+    },
+    {
+      title: "考试时长",
+      dataIndex: "createTime",
+    },
+    {
+      title: "试卷总分",
+      dataIndex: "score",
+    },
+    {
+      title: "私有",
+      dataIndex: "self",
+    },
+    {
+      title: "科目ID",
+      dataIndex: "subjectId",
+    },
+    {
+      title: "适用年级",
+      dataIndex: "gradeType",
+    },
+    {
+      title: "操作",
+      dataIndex: "",
+    },
+  ];
+  const data = [];
 
-    return <td {...restProps}>{childNode}</td>;
-};
-
-const App = () => {
-    const [dataSource, setDataSource] = useState([
-        {
-            key: '0',
-            name: 'Edward King 0',
-            age: '32',
-            address: 'London, Park Lane no. 0',
-        },
-        {
-            key: '1',
-            name: 'Edward King 1',
-            age: '32',
-            address: 'London, Park Lane no. 1',
-        },
-    ]);
-    const [count, setCount] = useState(2);
-
-    const handleDelete = (key) => {
-        const newData = dataSource.filter((item) => item.key !== key);
-        setDataSource(newData);
-    };
-
-    const defaultColumns = [
-        {
-            title: 'name',
-            dataIndex: 'name',
-            width: '30%',
-            editable: true,
-        },
-        {
-            title: 'age',
-            dataIndex: 'age',
-        },
-        {
-            title: 'address',
-            dataIndex: 'address',
-        },
-        {
-            title: 'operation',
-            dataIndex: 'operation',
-            render: (_, record) =>
-                <span >
-
-                    <Tag color="#2db7f5" className={style.EditBtn} onClick={handleAdd}>编辑</Tag>
-
-                    <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.key)} className={style.DeleteBtn}>
-                        <Tag color="#f50" className={style.DeleteBtn}>删除</Tag>
-                    </Popconfirm>
-                </span>
-        },
-    ];
-    const [handleModal, sethandleModal] = useState(false)
-    const handleAdd = () => {
-        sethandleModal(true);
-    };
-    
-    function handleClose(){
-        sethandleModal(false);
-    }
-    const handleSave = (row) => {
-        const newData = [...dataSource];
-        const index = newData.findIndex((item) => row.key === item.key);
-        const item = newData[index];
-        newData.splice(index, 1, { ...item, ...row });
-        setDataSource(newData);
-    };
-
-    const components = {
-        body: {
-            row: EditableRow,
-            cell: EditableCell,
-        },
-    };
-    const columns = defaultColumns.map((col) => {
-        if (!col.editable) {
-            return col;
-        }
-
-        return {
-            ...col,
-            onCell: (record) => ({
-                record,
-                editable: col.editable,
-                dataIndex: col.dataIndex,
-                title: col.title,
-                handleSave,
-            }),
-        };
+  for (let i = 0; i < 46; i++) {
+    data.push({
+      key: i,
+      name: `Edward King ${i}`,
+      age: 32,
+      address: `London, Park Lane no. ${i}`,
     });
-    return (
-        <div>
-            <Button
-                onClick={handleAdd}
-                type="primary"
-                style={{
-                    marginBottom: 16,
-                }}
-            >
-                新增
-            </Button>
-            <Table
-                components={components}
-                rowClassName={() => 'editable-row'}
-                bordered
-                dataSource={dataSource}
-                columns={columns}
-                pagination={false}
-            />
-            <Pagination size="small" total={50} showSizeChanger showQuickJumper />
+  }
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-            <Modal title="Basic Modal" visible={handleModal} footer={null} onCancel={handleClose}>
-                <ModalBox sethandleModal={sethandleModal} />
-            </Modal>
+  const start = () => {
+    setLoading(true); // ajax request after empty completing
 
+    setTimeout(() => {
+      setSelectedRowKeys([]);
+      setLoading(false);
+    }, 1000);
+  };
+
+  const onSelectChange = (newSelectedRowKeys) => {
+    console.log("selectedRowKeys changed: ", selectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+  const hasSelected = selectedRowKeys.length > 0;
+  return (
+    <>
+      <div>
+        <div
+          style={{
+            marginBottom: 16,
+          }}
+        >
+          <Button
+            type="primary"
+            onClick={start}
+            disabled={!hasSelected}
+            loading={loading}
+          >
+            Reload
+          </Button>
+          <span
+            style={{
+              marginLeft: 8,
+            }}
+          >
+            {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
+          </span>
         </div>
-    );
-};
-
-export default App;
+        <Table
+          rowSelection={rowSelection}
+          columns={columns}
+          dataSource={data}
+        />
+      </div>
+    </>
+  );
+}
