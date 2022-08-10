@@ -19,9 +19,9 @@ export default function login() {
       captcha: values.captcha,
     }).then((res) => {
       console.log(res);
+      localStorage.setItem('VITE_ADMIN_TOKEN',res.data.accessToken)
     });
   };
-  
   return (
     <div className={Style.loginContainer}>
      <Switchtheme className={Style.antSwitch}/>

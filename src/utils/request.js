@@ -14,7 +14,7 @@ service.interceptors.request.use(function (config) {
     // 在请求发送之前给headers设置token
     // console.log(localStorage.getItem('VUE_ADMIN_TOKEN'));
     if (!config.url.includes("/sys/user/login")) {
-        // config.headers.authorization= localStorage.getItem('VUE_ADMIN_TOKEN')
+        config.headers.authorization= localStorage.getItem('VITE_ADMIN_TOKEN')
         // 给请求头设置token
         
     }
