@@ -50,7 +50,7 @@ function LayoutHeader(props) {
   }
   function handleClick(e){
     navigate("/"+e.key)
-    console.log(e.key);
+    // console.log(e.key);
   }
   // admin的下拉菜单里的内容
   const menu = (

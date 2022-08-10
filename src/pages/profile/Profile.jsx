@@ -8,7 +8,6 @@ export default function Basic() {
     const onChange = (checked) => {
         console.log(`switch to ${checked}`);
     };
-
     const [value, setValue] = useState(1);
     //单选框的onChange2
     const onChange2 = (e) => {
@@ -38,8 +37,6 @@ export default function Basic() {
                     
                 </div>
                 <Button type="primary" style={{ marginLeft: '100px', width:'200px',height:'50px' }}>保存</Button>
-
-
             </Space>
 
         </div>
