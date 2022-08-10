@@ -5,11 +5,9 @@ export default function ExamPaper() {
     async function getList(){
         let {data} = await getExamPaperList(); 
         console.log(data);
-        // console.log(11);
     }
     useEffect(()=>{
         getList()
-        // console.log("@@@","111");
     },[])
   const columns = [
     {
