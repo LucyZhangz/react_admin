@@ -38,7 +38,7 @@ const routes = () => (
   <Router>
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route path="/" element={<Home />}></Route>
+        <Route path="/home" element={<Home />}></Route>
         {/* 个人中心 */}
         <Route path="/profile" element={<Profile />}></Route>
         {/* 修改密码 */}
