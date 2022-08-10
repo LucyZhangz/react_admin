@@ -2,33 +2,35 @@ import { Button, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { getExamPaperList } from "../../../api/testManage/examPaper";
 export default function ExamPaper() {
-  const [paperList,setPaperList] = useState({
-    code:'',
-    delete:'',
-    duration:'',
-    gradeType:'',
-    id:'',
-    notes:'',
-    score:'',
-    self:'',
-    subjectId:'',
-    testName:''
-  })
-    async function getList(){
-        let {data} = await getExamPaperList(); 
-        console.log(data);
-        data.records.map((item,index)=>{
-          // setPaperList(item)
-          console.log(item);
-        })
-    }
-    useEffect(()=>{
-        getList()
-    },[])
+  const [paperList, setPaperList] = useState({
+    code: "",
+    delete: "",
+    duration: "",
+    gradeType: "",
+    id: "",
+    notes: "",
+    score: "",
+    self: "",
+    subjectId: "",
+    testName: "",
+  });
+  // const [list,setList] = useState([])
+  let list=[]
+  async function getList() {
+    let { data } = await getExamPaperList();
+    console.log(data);
+    data.records.map((item, index) => {
+      list.push(item)
+    });
+  }
+
+  useEffect(() => {
+    getList();
+  }, []);
   const columns = [
     {
       title: "试卷编号",
-      dataIndex: "createId",
+      dataIndex: "code",
     },
     {
       title: "试卷名称",
@@ -36,7 +38,7 @@ export default function ExamPaper() {
     },
     {
       title: "考试时长",
-      dataIndex: "createTime",
+      dataIndex: "duration",
     },
     {
       title: "试卷总分",
@@ -56,38 +58,35 @@ export default function ExamPaper() {
     },
     {
       title: "操作",
-      dataIndex: "",
+      dataIndex: "operation",
+      render:()=>(
+        <Button type="primary">编辑</Button>
+      )
+        
+      
+
     },
   ];
- 
-  const List = [];
 
- 
-  for (let i = 0; i < 46; i++) {
-    List.push({
-      key: i,
-      name: `Edward King ${i}`,
-      age: 32,
-      address: `London, Park Lane no. ${i}`,
-    });
-  }
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const start = () => {
-    setLoading(true); // ajax request after empty completing
+  // const start = () => {
+  //   setLoading(true); // ajax request after empty completing
 
-    setTimeout(() => {
-      setSelectedRowKeys([]);
-      setLoading(false);
-    }, 1000);
-  };
+  //   setTimeout(() => {
+  //     setSelectedRowKeys([]);
+  //     setLoading(false);
+  //   }, 1000);
+  // };
 
   const onSelectChange = (newSelectedRowKeys) => {
     console.log("selectedRowKeys changed: ", selectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
-
+  function handleAdd(){
+    console.log(111);
+  }
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
@@ -103,11 +102,17 @@ export default function ExamPaper() {
         >
           <Button
             type="primary"
-            onClick={start}
             disabled={!hasSelected}
             loading={loading}
           >
             Reload
+          </Button>
+          <Button
+            onClick={handleAdd}
+            type="primary"
+            style={{marginLeft:'10px'}}
+          >
+            新增
           </Button>
           <span
             style={{
@@ -120,7 +125,7 @@ export default function ExamPaper() {
         <Table
           rowSelection={rowSelection}
           columns={columns}
-          dataSource={List}
+          dataSource={list}
         />
       </div>
     </>
