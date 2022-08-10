@@ -10,7 +10,7 @@ const service = axios.create({
 // 添加请求拦截器
 service.interceptors.request.use(function (config) {
     NProgress.start();
-    console.log(config);
+    // console.log(config);
     // 在请求发送之前给headers设置token
     // console.log(localStorage.getItem('VUE_ADMIN_TOKEN'));
     if (!config.url.includes("/sys/user/login")) {
