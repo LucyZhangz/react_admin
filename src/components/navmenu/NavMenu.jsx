@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import Logo from "./imgs/logo.png";
 import { Layout, Menu } from "antd";
 import style from "./nav.module.less";
 import { createCollapseAction } from "../../store/actions/collaspe_action";
 import { connect } from "react-redux";
 import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
-const { Sider } = Layout;
+import {useNavigate} from 'react-router-dom'
 import { getMenuList } from '../../api/menuList'
-function App(props) {
 
-  function getItem(label, key, icon, children, type) {
+const { Sider } = Layout;
+function NavMenu(props) {
+const navigate = useNavigate();
+
+function getItem(label, key, icon, children, type) {
     return {
       key,
       icon,
@@ -22,11 +25,13 @@ function App(props) {
   const [menu, setmenu] = useState([]);
 
   async function MenuList() {
+    // console.log(222);
     let allmenu = await getMenuList()
     console.log(allmenu);
     setmenu(allmenu.data[0].children)
     const resMenu = transformMenu(allmenu.data[0].children)
     console.log(resMenu);
+    // const [Child,setChild] = useState([])
     resMenu.map((item) => {
 
       if (item.children) {
@@ -39,20 +44,24 @@ function App(props) {
 
   }
   console.log(menu);
+  
   function transformMenu(data) {
     const res = data.map((item) => {
       const obj = {
         label: item.title,
         key: item.id,
         type: item.type,
+        url:item.url
       }
 
       if (item.children && item.children.length) {
         obj.children = transformMenu(item.children)
       }else if(item.icon){
           obj.icon = icon
+      }else if(item.url!==''){
+          obj.key = item.url
       }
-
+      
 
       return obj
     })
@@ -63,7 +72,8 @@ function App(props) {
 
 
   const onClick = (e) => {
-    console.log('click ', e);
+    console.log('click ', e.key.slice(6));
+    // navigate(e.key.slice(6))
   };
 
   useEffect(() => {
@@ -81,7 +91,6 @@ function App(props) {
       </div>
       <Menu
         onClick={onClick}
-        defaultSelectedKeys={['1']}
         mode="inline"
         items={menu}
         theme="dark"
@@ -89,4 +98,11 @@ function App(props) {
     </Sider>
   );
 }
-export default App
+export default connect(
+  (state) => ({
+    collapsed: state.collapse,
+  }),
+  {
+    createCollapseAction,
+  }
+)(NavMenu);
