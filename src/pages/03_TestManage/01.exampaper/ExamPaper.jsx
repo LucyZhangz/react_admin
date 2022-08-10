@@ -1,6 +1,7 @@
-import { Button, Table } from "antd";
+import { Button, Table,Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { getExamPaperList } from "../../../api/testManage/examPaper";
+import ModalBox from './ModalBox'
 export default function ExamPaper() {
   const [paperList, setPaperList] = useState({
     code: "",
@@ -14,13 +15,14 @@ export default function ExamPaper() {
     subjectId: "",
     testName: "",
   });
+  const [handleModal,setHandleModal] = useState(false)
   // const [list,setList] = useState([])
-  let list=[]
+  let list = [];
   async function getList() {
     let { data } = await getExamPaperList();
     console.log(data);
     data.records.map((item, index) => {
-      list.push(item)
+      list.push(item);
     });
   }
 
@@ -59,34 +61,26 @@ export default function ExamPaper() {
     {
       title: "操作",
       dataIndex: "operation",
-      render:()=>(
-        <Button type="primary">编辑</Button>
-      )
-        
-      
-
+      render: () => <Button type="primary">编辑</Button>,
     },
   ];
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // const start = () => {
-  //   setLoading(true); // ajax request after empty completing
-
-  //   setTimeout(() => {
-  //     setSelectedRowKeys([]);
-  //     setLoading(false);
-  //   }, 1000);
-  // };
+  
 
   const onSelectChange = (newSelectedRowKeys) => {
     console.log("selectedRowKeys changed: ", selectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
-  function handleAdd(){
-    console.log(111);
-  }
+  function handleAdd() {
+    setHandleModal(true)
+  };
+
+  function handleClose(){
+    setHandleModal(false)
+  };
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
@@ -100,17 +94,13 @@ export default function ExamPaper() {
             marginBottom: 16,
           }}
         >
-          <Button
-            type="primary"
-            disabled={!hasSelected}
-            loading={loading}
-          >
+          <Button type="primary" disabled={!hasSelected} loading={loading}>
             Reload
           </Button>
           <Button
             onClick={handleAdd}
             type="primary"
-            style={{marginLeft:'10px'}}
+            style={{ marginLeft: "10px" }}
           >
             新增
           </Button>
@@ -127,6 +117,14 @@ export default function ExamPaper() {
           columns={columns}
           dataSource={list}
         />
+        <Modal
+          title="Basic Modal"
+          visible={handleModal}
+          footer={null}
+          onCancel={handleClose}
+        >
+          <ModalBox handleModal={setHandleModal} />
+        </Modal>
       </div>
     </>
   );
