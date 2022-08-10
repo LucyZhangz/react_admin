@@ -1,4 +1,4 @@
-import { Button, Form, Input, Popconfirm, Table, Tag, Pagination, Modal, Tree, Select } from 'antd';
+import { Button, Form, Input, Popconfirm, Table, Tag, Pagination, Modal, Tree, Select, Card } from 'antd';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import style from './staff.module.less'
 import ModalBox from './ModalBox'
@@ -256,6 +256,7 @@ const App = () => {
         {
             title: 'operation',
             dataIndex: 'operation',
+            fixed: 'right',
             render: (_, record) =>
                 <span >
 
@@ -266,6 +267,7 @@ const App = () => {
                     </Popconfirm>
                 </span>
         },
+        
     ];
     const data = [];
     for (let i = 0; i < 100; i++) {
@@ -343,31 +345,34 @@ const App = () => {
                         </Option>
                         <Option value="Yiminghe">yiminghe</Option>
                     </Select>
-                       <Button type="primary" style={{position:'relative',left:'50px'}}>查询</Button>
-                    </div>
+                    <Button type="primary" style={{ position: 'relative', left: '50px' }}>查询</Button>
+                </div>
                 <Button
                     onClick={handleAdd}
                     type="primary"
                     style={{
                         marginBottom: 16,
-                        position:'relative',
-                        top:'10px',
-                       height:"25px",
-                       fontSize:'12px',
-                       textAlign:'center'
+                        position: 'relative',
+                        top: '10px',
+                        height: "25px",
+                        fontSize: '12px',
+                        textAlign: 'center'
                     }}
                 >
                     新增
                 </Button>
-                <Table
-                    columns={columns}
-                    dataSource={data}
-                    scroll={{
-                        x: 1280,
-                        y: 300,
-                    }}
-                    pagination={false}
-                />
+                <Card style={{ width: 1000 }}>
+                    <Table
+                        columns={columns}
+                        dataSource={data}
+                        scroll={{
+                            x: 1280,
+                            y: 300,
+                        }}
+                        pagination={false}
+                    />
+                </Card>
+
                 <Pagination size="small" total={50} showSizeChanger showQuickJumper />
             </div>
 
