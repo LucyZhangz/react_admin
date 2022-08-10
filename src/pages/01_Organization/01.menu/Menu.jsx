@@ -1,7 +1,5 @@
 import { Button, Form, Input, Popconfirm, Table, Tag, Pagination, Modal} from 'antd';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import style from './menu.module.less'
-import ModalBox from './ModalBox'
 const EditableContext = React.createContext(null);
 const EditableRow = ({ index, ...props }) => {
     const [form] = Form.useForm();
@@ -109,7 +107,6 @@ const App = () => {
         {
             title: 'name',
             dataIndex: 'name',
-            width: '30%',
             editable: true,
         },
         {
