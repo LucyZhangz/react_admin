@@ -23,7 +23,7 @@ export default function login() {
     }).then((res) => {
       console.log(res);
       localStorage.setItem('VITE_ADMIN_TOKEN',res.data.accessToken)
-      navigate('/home', {
+      navigate('/', {
         replace: false,
       }) 
     });
