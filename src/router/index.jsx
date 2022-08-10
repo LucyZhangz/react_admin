@@ -51,8 +51,8 @@ const routes = () => (
         <Route path="/users" element={<Staff />}></Route>
         {/* 试题管理 */}
         <Route path="/dlTest" element={<ExamPaper />}></Route>
-        <Route path="/dlQueationBank" element={<Question />}></Route>
-        <Route path="/dlQueationType" element={<TypeTest />}></Route>
+        <Route path="/dlQuestionBank" element={<Question />}></Route>
+        <Route path="/dlQuestionType" element={<TypeTest />}></Route>
         {/* 考试管理 */}
         <Route path="/dlExamPlan" element={<Plan />}></Route>
         <Route path="/dlExamList" element={<Query />}></Route>
@@ -63,7 +63,7 @@ const routes = () => (
         <Route path="/dlExamResultUnifyInput" element={<EntryRecorded />}></Route>
         {/* 课表管理 */}
         <Route path="/dlArrangingCourse" element={<TaskSchedule />}></Route>
-        <Route path="/tescherTable" element={<TeacherSchedule />}></Route>
+        <Route path="/teacherTable" element={<TeacherSchedule />}></Route>
         <Route path="/classTable" element={<ClassSchedule />}></Route>
         <Route path="/dlCourseTable" element={<ChangeCourse />}></Route>
         {/* 教务管理 */}

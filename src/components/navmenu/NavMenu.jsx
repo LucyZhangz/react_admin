@@ -73,7 +73,7 @@ function getItem(label, key, icon, children, type) {
 
   const onClick = (e) => {
     console.log('click ', e.key.slice(6));
-    // navigate(e.key.slice(6))
+    navigate(e.key.slice(6))
   };
 
   useEffect(() => {
