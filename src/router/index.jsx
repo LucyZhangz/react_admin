@@ -1,3 +1,6 @@
+import App from "../App";
+import {Navigate} from 'react-router'
+import Placerouter from '../pages/login/Placerouter'
 import NotFound from "../pages/notFound/NotFound";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "../pages/login/Login";
@@ -35,44 +38,7 @@ import Term from "../pages/07_EducationManage/08.term/Term"
 const routes = () => (
   <Router>
     <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route path="/" element={<Home />}></Route>
-        {/* 个人中心 */}
-        <Route path="/profile" element={<Profile />}></Route>
-        {/* 修改密码 */}
-        <Route path="/changepassword" element={<ChangePassword />}></Route>
-        {/* 组织管理 */}
-        <Route path="/menu" element={<Menu />}></Route>
-        <Route path="/role" element={<RoleAdmin />}></Route>
-        <Route path="/department" element={<Department />}></Route>
-        {/* 职工管理 */}
-        <Route path="/staff" element={<Staff />}></Route>
-        {/* 试题管理 */}
-        <Route path="/exampaper" element={<ExamPaper />}></Route>
-        <Route path="/question" element={<Question />}></Route>
-        <Route path="/typetest" element={<TypeTest />}></Route>
-        {/* 考试管理 */}
-        <Route path="/plan" element={<Plan />}></Route>
-        <Route path="/query" element={<Query />}></Route>
-        <Route path="/affair" element={<Affair />}></Route>
-        {/* 成绩管理 */}
-        <Route path="/scoreinquiry" element={<ScoreInquiry />}></Route>
-        <Route path="/scorerecorded" element={<ScoreRecorded />}></Route>
-        <Route path="/entryrecorded" element={<EntryRecorded />}></Route>
-        {/* 课表管理 */}
-        <Route path="/taskschedule" element={<TaskSchedule />}></Route>
-        <Route path="/teacherschedule" element={<TeacherSchedule />}></Route>
-        <Route path="/classschedule" element={<ClassSchedule />}></Route>
-        <Route path="/changecourse" element={<ChangeCourse />}></Route>
-        {/* 教务管理 */}
-        <Route path="/coursesetting" element={<CourseSetting />}></Route>
-        <Route path="/class" element={<Class />}></Route>
-        <Route path="/student" element={<Student />}></Route>
-        <Route path="/courseadmin" element={<CourseAdmin />}></Route>
-        <Route path="/classroom" element={<ClassRoom />}></Route>
-        <Route path="/subject" element={<Subject />}></Route>
-        <Route path="/grade" element={<Grade />}></Route>
-        <Route path="/term" element={<Term />}></Route>
+      <Route path="/" element={<Layout />} render={()=>localStorage.getItem('token') ? <Home/> : <Redirect to='/login'/>}>
       </Route>
       {/* 404页面 */}
       <Route path="*" element={<NotFound />}></Route>

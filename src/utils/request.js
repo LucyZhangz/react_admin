@@ -25,11 +25,14 @@ service.interceptors.request.use(function (config) {
 });
 // 添加响应拦截器
 service.interceptors.response.use(function (response) {
-    // console.log(response.status);
+ 
       // 关闭进度条
     NProgress.done();
-    if (response.status == 0) {
+    if (response.code === 0) {
+    //   登录成功
+    // <Route path='/home' element={<Home />}></Route>
     }
+
     // 对响应数据执行操作
     return response.data;
 }, function (error) {
