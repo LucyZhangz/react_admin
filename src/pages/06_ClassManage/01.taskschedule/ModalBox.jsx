@@ -68,7 +68,7 @@ export default function ModalBox() {
       },
     },
   ];
-  // information 表格内容区
+  // information 表格内容区的
   const data = [
     {
       key: '1',
