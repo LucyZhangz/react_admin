@@ -2,9 +2,25 @@ import { Button, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { getExamPaperList } from "../../../api/testManage/examPaper";
 export default function ExamPaper() {
+  const [paperList,setPaperList] = useState({
+    code:'',
+    delete:'',
+    duration:'',
+    gradeType:'',
+    id:'',
+    notes:'',
+    score:'',
+    self:'',
+    subjectId:'',
+    testName:''
+  })
     async function getList(){
         let {data} = await getExamPaperList(); 
         console.log(data);
+        data.records.map((item,index)=>{
+          // setPaperList(item)
+          console.log(item);
+        })
     }
     useEffect(()=>{
         getList()
@@ -43,10 +59,12 @@ export default function ExamPaper() {
       dataIndex: "",
     },
   ];
-  const data = [];
+ 
+  const List = [];
 
+ 
   for (let i = 0; i < 46; i++) {
-    data.push({
+    List.push({
       key: i,
       name: `Edward King ${i}`,
       age: 32,
@@ -102,7 +120,7 @@ export default function ExamPaper() {
         <Table
           rowSelection={rowSelection}
           columns={columns}
-          dataSource={data}
+          dataSource={List}
         />
       </div>
     </>
