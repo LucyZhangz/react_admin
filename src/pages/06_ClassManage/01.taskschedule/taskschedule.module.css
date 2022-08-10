@@ -19,8 +19,10 @@
 .DeleteBtn {
   cursor: pointer;
 }
-.SwichCheck {
-  position: relative !important;
-  left: 10px;
-  top: 0px !important;
+:global(.ant-modal-content) {
+  width: 70vw;
+  min-height: 80vh;
+}
+:global(.ant-input-search-button) {
+  height: 50px  !important;
 }

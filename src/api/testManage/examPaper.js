@@ -1,6 +1,6 @@
 import request from '../../utils/request'
 
-// 登陆接口
+// 获取列表
 export async function getExamPaperList() {
     let res = await request({
         method: 'post',

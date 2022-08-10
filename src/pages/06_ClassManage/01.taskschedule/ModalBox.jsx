@@ -107,5 +107,3 @@ const App = (props) => {
     </Form>
   );
 };
-
-export default App;
