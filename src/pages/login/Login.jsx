@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { createRef } from "react-dom";
+import {useNavigate} from 'react-router-dom'
+
 import Style from "./login.module.css";
 import leftBg from "./images/login-box-bg.svg";
 import { Button, Form, Input } from "antd";
@@ -8,18 +10,22 @@ import { userlogin} from "../../api/login";
 import Theme from '../../components/ThemeCheck/Theme'
 import Switchtheme from '../../components/Switch/Switchtheme'
 export default function login() {
+  const navigate = useNavigate()
   const [form] = Form.useForm();
   // 获取input数值
   const myRef = React.useRef();
   const onFinish =async(values) => {
     console.log("Finish:", values);
      await userlogin({
-      username: values.username,
-      password: values.password,
+      username: 'admin',
+      password: 123456,
       captcha: values.captcha,
     }).then((res) => {
       console.log(res);
       localStorage.setItem('VITE_ADMIN_TOKEN',res.data.accessToken)
+      navigate('/home', {
+        replace: false,
+      }) 
     });
   };
   return (
