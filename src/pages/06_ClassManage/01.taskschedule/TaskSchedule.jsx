@@ -1,10 +1,4 @@
 import React from 'react'
-
-export default function TaskSchedule() {
-  return (
-    <div>TaskSchedule</div>
-  )
-}
 import { Button, Form, Input, Popconfirm, Table, Tag, Pagination, Modal} from 'antd';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import style from './taskschedule.module.less'

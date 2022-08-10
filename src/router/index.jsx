@@ -44,37 +44,37 @@ const routes = () => (
         {/* 修改密码 */}
         <Route path="/changepassword" element={<ChangePassword />}></Route>
         {/* 组织管理 */}
-        <Route path="/menu" element={<Menu />}></Route>
-        <Route path="/role" element={<RoleAdmin />}></Route>
-        <Route path="/department" element={<Department />}></Route>
+        <Route path="/menus" element={<Menu />}></Route>
+        <Route path="/roles" element={<RoleAdmin />}></Route>
+        <Route path="/depts" element={<Department />}></Route>
         {/* 职工管理 */}
-        <Route path="/staff" element={<Staff />}></Route>
+        <Route path="/users" element={<Staff />}></Route>
         {/* 试题管理 */}
-        <Route path="/exampaper" element={<ExamPaper />}></Route>
-        <Route path="/question" element={<Question />}></Route>
-        <Route path="/typetest" element={<TypeTest />}></Route>
+        <Route path="/dlTest" element={<ExamPaper />}></Route>
+        <Route path="/dlQueationBank" element={<Question />}></Route>
+        <Route path="/dlQueationType" element={<TypeTest />}></Route>
         {/* 考试管理 */}
-        <Route path="/plan" element={<Plan />}></Route>
-        <Route path="/query" element={<Query />}></Route>
-        <Route path="/affair" element={<Affair />}></Route>
+        <Route path="/dlExamPlan" element={<Plan />}></Route>
+        <Route path="/dlExamList" element={<Query />}></Route>
+        <Route path="/dlExamMyList" element={<Affair />}></Route>
         {/* 成绩管理 */}
-        <Route path="/scoreinquiry" element={<ScoreInquiry />}></Route>
-        <Route path="/scorerecorded" element={<ScoreRecorded />}></Route>
-        <Route path="/entryrecorded" element={<EntryRecorded />}></Route>
+        <Route path="/dlExamResult" element={<ScoreInquiry />}></Route>
+        <Route path="/dlExamResultInput" element={<ScoreRecorded />}></Route>
+        <Route path="/dlExamResultUnifyInput" element={<EntryRecorded />}></Route>
         {/* 课表管理 */}
-        <Route path="/taskschedule" element={<TaskSchedule />}></Route>
-        <Route path="/teacherschedule" element={<TeacherSchedule />}></Route>
-        <Route path="/classschedule" element={<ClassSchedule />}></Route>
-        <Route path="/changecourse" element={<ChangeCourse />}></Route>
+        <Route path="/dlArrangingCourse" element={<TaskSchedule />}></Route>
+        <Route path="/tescherTable" element={<TeacherSchedule />}></Route>
+        <Route path="/classTable" element={<ClassSchedule />}></Route>
+        <Route path="/dlCourseTable" element={<ChangeCourse />}></Route>
         {/* 教务管理 */}
-        <Route path="/coursesetting" element={<CourseSetting />}></Route>
-        <Route path="/class" element={<Class />}></Route>
-        <Route path="/student" element={<Student />}></Route>
-        <Route path="/courseadmin" element={<CourseAdmin />}></Route>
-        <Route path="/classroom" element={<ClassRoom />}></Route>
-        <Route path="/subject" element={<Subject />}></Route>
-        <Route path="/grade" element={<Grade />}></Route>
-        <Route path="/term" element={<Term />}></Route>
+        <Route path="/dlClassTeacher" element={<CourseSetting />}></Route>
+        <Route path="/dlClass" element={<Class />}></Route>
+        <Route path="/dlStudent" element={<Student />}></Route>
+        <Route path="/dlCourse" element={<CourseAdmin />}></Route>
+        <Route path="/dlRoom" element={<ClassRoom />}></Route>
+        <Route path="/dlSubject" element={<Subject />}></Route>
+        <Route path="/dlGrade" element={<Grade />}></Route>
+        <Route path="/dlTerm" element={<Term />}></Route>
       </Route>
       {/* 404页面 */}
       <Route path="*" element={<NotFound />}></Route>
