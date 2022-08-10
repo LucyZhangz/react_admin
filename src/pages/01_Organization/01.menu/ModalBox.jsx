@@ -1,5 +1,6 @@
-import { Button, Form, Input,Switch,Tree  } from 'antd';
-import React from 'react';
+import { Button, Form, Input,Switch,Tree,Radio  } from 'antd';
+import style from './menu.module.less'
+import React,{useState }from 'react';
 const layout = {
   labelCol: {
     span: 8,
@@ -60,6 +61,18 @@ const validateMessages = {
   },
 };
 const App = (props) => {
+  //单选框里的值
+
+const [value, setValue] = useState(1);
+
+  const onChange = (e) => {
+    console.log('radio checked', e.target.value);
+    setValue(e.target.value);
+  };
+
+
+
+
   const onFinish = (values) => {
     console.log(values);
   };
@@ -74,9 +87,13 @@ const App = (props) => {
     <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
       <Form.Item
         // name={['user', 'name']}
-        label="角色名称"
+        label="类型"
       >
-        <Input />
+    <Radio.Group onChange={onChange} value={value}>
+      <Radio value={1}>目录</Radio>
+      <Radio value={2}>菜单</Radio>
+      <Radio value={3}>按钮</Radio>
+    </Radio.Group>
       </Form.Item>
       <Form.Item
         // name={['user', 'name']}
@@ -85,7 +102,7 @@ const App = (props) => {
         <Input />
       </Form.Item>
       <Form.Item label="状态" valuePropName="checked">
-        <Switch />
+        <Switch className={style.SwichCheck} />
       </Form.Item>
       <Form.Item label='请选择权限'>
       <Tree

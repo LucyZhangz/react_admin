@@ -107,19 +107,39 @@ const App = () => {
 
     const defaultColumns = [
         {
-            title: 'name',
-            dataIndex: 'name',
-            width: '30%',
+            title: '菜单名称',
+            dataIndex: 'name',  
             editable: true,
         },
         {
-            title: 'age',
-            dataIndex: 'age',
+            title: 'url',
+            dataIndex: 'url',
         },
         {
-            title: 'address',
-            dataIndex: 'address',
+            title: '图标',
+            dataIndex: 'name',
         },
+        {
+            title: '类型',
+            dataIndex: 'name',
+        },
+        {
+            title: '父级名称',
+            dataIndex: 'name',
+        },
+        {
+            title: '排序',
+            dataIndex: 'name',
+        },
+        {
+            title: '资源标识',
+            dataIndex: 'name',
+        },
+        {
+            title: '状态',
+            dataIndex: 'name',
+        },
+        
         {
             title: 'operation',
             dataIndex: 'operation',
