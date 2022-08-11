@@ -2,6 +2,7 @@ import { Button, Checkbox, Form, Input, message, Steps ,Select,Switch} from "ant
 const { Step } = Steps;
 import React, { useState } from "react";
 import Style from './exampaper.module.less'
+const { TextArea } = Input;
 const layout = {
   labelCol: {
     span: 8,
@@ -27,6 +28,7 @@ function onChange(){
 const page1 = (
   <Form
     name="basic"
+    style={{width:'80%',marginTop:'20px'}}
     labelCol={{
       span: 8,
     }}
@@ -130,7 +132,12 @@ const page1 = (
     <Form.Item
       label="私有"
     >
-     <Switch defaultChecked onChange={onChange} className={Style.status}/>
+     <Switch defaultChecked onChange={onChange} className={Style.SwichCheck}/>
+    </Form.Item>
+    <Form.Item
+      label="注意事项"
+    >
+      <TextArea rows={4} placeholder="maxLength is 6" maxLength={6} />
     </Form.Item>
 
    

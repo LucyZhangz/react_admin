@@ -43,7 +43,7 @@ function LayoutHeader(props) {
         window.onresize = originResizeFunc;
       }
     };
-  } // eslint-disable-line react-hooks/exhaustive-deps
+  } 
   function onEscCancelFull() {
     // 用于反显状态
     setFullPage(isFullscreenElement());

@@ -53,7 +53,6 @@ function getItem(label, key, icon, children, type) {
         type: item.type,
         url:item.url
       }
-
       if (item.children && item.children.length) {
         obj.children = transformMenu(item.children)
       }else if(item.icon){
@@ -61,15 +60,10 @@ function getItem(label, key, icon, children, type) {
       }else if(item.url!==''){
           obj.key = item.url
       }
-      
-
       return obj
     })
     return res
   }
-
-
-
 
   const onClick = (e) => {
     console.log('click ', e.key.slice(6));

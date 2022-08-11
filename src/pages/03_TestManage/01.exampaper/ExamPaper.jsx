@@ -1,29 +1,19 @@
-import { Button, Table,Modal } from "antd";
+import { Button, Table, Modal ,Switch} from "antd";
 import React, { useEffect, useState } from "react";
 import { getExamPaperList } from "../../../api/testManage/examPaper";
-import ModalBox from './ModalBox'
+import ModalBox from "./ModalBox";
 export default function ExamPaper() {
-  const [paperList, setPaperList] = useState({
-    code: "",
-    delete: "",
-    duration: "",
-    gradeType: "",
-    id: "",
-    notes: "",
-    score: "",
-    self: "",
-    subjectId: "",
-    testName: "",
-  });
-  const [handleModal,setHandleModal] = useState(false)
-  // const [list,setList] = useState([])
-  let list = [];
+  const [paperList, setPaperList] = useState([]);
+  const [handleModal, setHandleModal] = useState(false);
   async function getList() {
     let { data } = await getExamPaperList();
-    console.log(data);
     data.records.map((item, index) => {
-      list.push(item);
+      item.key = item.id;
+
+      console.log(item);
     });
+
+    setPaperList(data.records);
   }
 
   useEffect(() => {
@@ -33,30 +23,44 @@ export default function ExamPaper() {
     {
       title: "试卷编号",
       dataIndex: "code",
+      key: "code",
+      render: (text) => <p>{text}</p>,
     },
     {
       title: "试卷名称",
       dataIndex: "testName",
+      key: "testName",
+      render: (text) => <p>{text}</p>,
     },
     {
       title: "考试时长",
       dataIndex: "duration",
+      key: "duration",
+      render: (text) => <p>{text}</p>,
     },
     {
       title: "试卷总分",
       dataIndex: "score",
+      key: "score",
+      render: (text) => <p>{text}</p>,
     },
     {
       title: "私有",
       dataIndex: "self",
+      key: "self",
+      render: () => <Switch defaultChecked/>,
     },
     {
       title: "科目ID",
       dataIndex: "subjectId",
+      key: "subjectId",
+      render: (text) => <p>{text}</p>,
     },
     {
       title: "适用年级",
       dataIndex: "gradeType",
+      key: "gradeType",
+      render: (text) => <p>{text}</p>,
     },
     {
       title: "操作",
@@ -73,12 +77,12 @@ export default function ExamPaper() {
     setSelectedRowKeys(newSelectedRowKeys);
   };
   function handleAdd() {
-    setHandleModal(true)
-  };
+    setHandleModal(true);
+  }
 
-  function handleClose(){
-    setHandleModal(false)
-  };
+  function handleClose() {
+    setHandleModal(false);
+  }
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
@@ -113,7 +117,7 @@ export default function ExamPaper() {
         <Table
           rowSelection={rowSelection}
           columns={columns}
-          dataSource={list}
+          dataSource={paperList}
         />
         <Modal
           title="Basic Modal"

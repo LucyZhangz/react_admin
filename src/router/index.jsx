@@ -2,7 +2,11 @@ import App from "../App";
 import { Navigate } from "react-router";
 import Placerouter from "../pages/login/Placerouter";
 import NotFound from "../pages/notFound/NotFound";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route
+} from "react-router-dom";
 import Login from "../pages/login/Login";
 import Home from "../pages/home/Home";
 import Profile from "../pages/profile/Profile";
@@ -60,7 +64,10 @@ const routes = () => (
         {/* 成绩管理 */}
         <Route path="/dlExamResult" element={<ScoreInquiry />}></Route>
         <Route path="/dlExamResultInput" element={<ScoreRecorded />}></Route>
-        <Route path="/dlExamResultUnifyInput" element={<EntryRecorded />}></Route>
+        <Route
+          path="/dlExamResultUnifyInput"
+          element={<EntryRecorded />}
+        ></Route>
         {/* 课表管理 */}
         <Route path="/dlArrangingCourse" element={<TaskSchedule />}></Route>
         <Route path="/teacherTable" element={<TeacherSchedule />}></Route>
