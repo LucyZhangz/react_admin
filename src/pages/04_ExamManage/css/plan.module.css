@@ -19,3 +19,6 @@
 .DeleteBtn {
   cursor: pointer;
 }
+/* :global(.ant-modal-content) {
+  width:90vw;
+ } */

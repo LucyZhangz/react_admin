@@ -2,11 +2,7 @@ import App from "../App";
 import { Navigate } from "react-router";
 import Placerouter from "../pages/login/Placerouter";
 import NotFound from "../pages/notFound/NotFound";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "../pages/login/Login";
 import Home from "../pages/home/Home";
 import Profile from "../pages/profile/Profile";
@@ -18,6 +14,7 @@ import Department from "../pages/01_Organization/03.department/Department";
 import Staff from "../pages/02_WorkersManage/staff/Staff";
 import ExamPaper from "../pages/03_TestManage/01.exampaper/ExamPaper";
 import Question from "../pages/03_TestManage/02.question/Question";
+import EditQuestion from '../pages/03_TestManage/02.question/EditPage'
 import TypeTest from "../pages/03_TestManage/03.typetest/TypeTest";
 import Plan from "../pages/04_ExamManage/01.plan/Plan";
 import Query from "../pages/04_ExamManage/02.query/Query";
@@ -41,7 +38,7 @@ import Term from "../pages/07_EducationManage/08.term/Term";
 const routes = () => (
   <Router>
     <Routes>
-      <Route path="/" element={<Layout />}>
+      <Route path="/" element={<Layout />} state={{title:'首页'}}>
         <Route path="/" element={<Home />}></Route>
         {/* 个人中心 */}
         <Route path="/profile" element={<Profile />}></Route>
@@ -56,6 +53,8 @@ const routes = () => (
         {/* 试题管理 */}
         <Route path="/dlTest" element={<ExamPaper />}></Route>
         <Route path="/dlQuestionBank" element={<Question />}></Route>
+        <Route path="/addQuestion" element={<EditQuestion />}></Route>
+        <Route path="/addQuestion/:id" element={<EditQuestion />}></Route>
         <Route path="/dlQuestionType" element={<TypeTest />}></Route>
         {/* 考试管理 */}
         <Route path="/dlExamPlan" element={<Plan />}></Route>
@@ -92,3 +91,4 @@ const routes = () => (
 );
 
 export default routes;
+

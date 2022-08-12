@@ -28,13 +28,13 @@ function onChange(){
 const page1 = (
   <Form
     name="basic"
-    style={{width:'80%',marginTop:'20px'}}
     labelCol={{
       span: 8,
     }}
     wrapperCol={{
       span: 16,
     }}
+    style={{marginTop:'20px'}}
     initialValues={{
       remember: true,
     }}

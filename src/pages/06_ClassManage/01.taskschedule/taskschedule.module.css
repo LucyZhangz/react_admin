@@ -19,10 +19,9 @@
 .DeleteBtn {
   cursor: pointer;
 }
-:global(.ant-modal-content) {
-  width: 70vw;
-  min-height: 80vh;
-}
 :global(.ant-input-search-button) {
   height: 50px  !important;
+}
+:global(.ant-table-cell) {
+  height: 30px  !important;
 }

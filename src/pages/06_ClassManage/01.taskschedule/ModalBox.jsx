@@ -1,7 +1,12 @@
 import { Button, message, Steps } from 'antd';
 import React, { useState } from 'react';
-import { arrang } from '../../../api/classManage/taskschedule'
+import { arrang, list, add } from '../../../api/classManage/taskschedule'
+import { DownOutlined } from '@ant-design/icons';
+//tab1的多选按钮
+import { Checkbox, Col, Row } from 'antd';
 import {
+  Dropdown,
+  Menu,
   Modal,
   Tabs,
   Cascader,
@@ -15,21 +20,21 @@ import {
   Table,
   Divider,
   Pagination
-
 } from 'antd';
 // import { AudioOutlined } from '@ant-design/icons';
 import { Space } from 'antd';
 import { done } from 'nprogress';
 import { useEffect } from 'react';
-export default function ModalBox() {
+import { useWatch } from 'antd/lib/form/Form';
+export default function ModalBox(props) {
   useEffect(() => {
-    keygen()
+    // keygen()
+    console.log(props.dataSource[0].createId);
   }, [])
-  async function keygen() {
-    let res = await arrang()
-     console.log(res);
-  }
-
+  // async function keygen() {
+  //   let res = await arrang()
+  //   console.log(res);
+  // }
   // information 内容区
   const { Step } = Steps;
   const { Search } = Input;
@@ -124,6 +129,85 @@ export default function ModalBox() {
       columnKey: 'age',
     });
   };
+  //tab1的下拉菜单的事件
+  let tab = []
+  let content = props.dataSource.map((item1) => {
+    tab.push({ 'label': item1.arranging, 'key': item1.key })
+  })
+  //tab1的下拉菜单
+  const menu = (
+    <Menu
+      onClick={down}
+      items={tab}
+    />
+  );
+  //定义多选框是否显现
+  const [show, setshow] = useState(false)
+  //tab1下拉菜单的点击事件
+  async function down() {
+    let xunlist = await list(props.dataSource[0].termId)
+    setshow(true)
+    settitle(xunlist.data)
+    console.log(xunlist);
+  }
+  const [title, settitle] = useState([]);
+
+  //获取input的框里面的值
+  //排课计划名称
+  const [firstName, setFirstName] = useState('');
+  const [Semester, setSemester] = useState('1');
+
+  const [weekName, setweekName] = useState('');
+  //上午
+  const [InMorning, setInMorning] = useState('');
+  //下
+  const [InAfternoon, setInAfternoon] = useState('');
+  //晚上
+  const [Evening, setEvening] = useState('');
+  //
+  const [Years, setYears] = useState('');
+  //多选框的点击事件
+  function multi(key) {
+    setYears(key)
+  }
+  const [current, setCurrent] = useState(0);
+  const prev = () => {
+    setCurrent(current - 1);
+  };
+  //最后一页进行跳转
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  // function but() {
+  //   //  history.go(0) 
+  //   setIsModalVisible(false);
+  // }
+  //点击第一个下一页发送axios新增请求
+  const next = async () => {
+    if (current == 0) {
+      let a = await add({
+        amNum: InMorning,
+        arrangingName: firstName,
+        gradeId: Years,
+        id: '',
+        nightNum: Evening,
+        pmNum: InAfternoon,
+        weekDayNum: weekName,
+        termId: props.dataSource[0].termId
+      })
+      message.success({
+        content: '添加成功',
+        className: 'custom-class',
+        style: {
+          marginTop: '20vh',
+        },
+      });
+    }
+    setCurrent(current + 1);
+    console.log(current);
+    if(current==3){
+      alert('111')
+      setIsModalVisible(false);
+    }
+  };
   const information = (
     <div>
       <div>
@@ -145,28 +229,71 @@ export default function ModalBox() {
                 size={componentSize}
               >
                 <Form.Item label="计划名称">
-                  <Input placeholder='请输入排课计划名称' />
+                  <Input placeholder='请输入排课计划名称' onChange={event => setFirstName(event.target.value)}
+                    value={firstName} />
                 </Form.Item>
                 <Form.Item label="学期">
-                  <Select placeholder='请选择学期'>
-                    <Select.Option value="demo">Demo</Select.Option>
-                  </Select>
+                  <Dropdown overlay={menu}>
+                    <Button>
+                      <Space>
+                        请选择学期
+                        <DownOutlined />
+                      </Space>
+                    </Button>
+                  </Dropdown>
+
                 </Form.Item>
                 <Form.Item label="周上课天数">
-                  <Input placeholder='请输入周上课数' />
+                  <Input placeholder='请输入周上课数' onChange={event => setweekName(event.target.value)}
+                    value={weekName} />
                 </Form.Item>
                 <div>
-                  <Form.Item label="上午课程数" >
-                    <Input placeholder='请输入上午课程数' />
+                  <Form.Item label="上午课程数"
+                    rules={[
+                      {
+                        required: true,
+                      },
+                      {
+                        type: 'Number',
+                        warningOnly: false,
+
+                      },
+                    ]} >
+                    <Input placeholder='请输入上午课程数'
+                      onChange={event => setInMorning(event.target.value)}
+                      value={InMorning} />
                   </Form.Item>
                   <Form.Item label="下午课程数">
-                    <Input placeholder='请输入下午课程数' />
+                    <Input placeholder='请输入下午课程数'
+                      onChange={event => setInAfternoon(event.target.value)}
+                      value={InAfternoon} />
                   </Form.Item>
                   <Form.Item label="晚上课程数">
-                    <Input placeholder='请输入晚上课程数' />
+                    <Input placeholder='请输入晚上课程数'
+                      onChange={event => setEvening(event.target.value)}
+                      value={Evening} />
                   </Form.Item>
                 </div>
                 <Form.Item label="参排年级">
+                  <Checkbox.Group
+                  
+                    style={{
+                      width: '100%',
+                      display: show ? 'block' : 'none'
+                    }}
+                    onChange={multi}
+                  >
+                    <Row>
+                      {title.map((item, index) => {
+                        return <Col span={8} key={index} >
+                          <Checkbox
+                            value={item.gradeId}
+                            key={index} >{item.gradeName}</Checkbox>
+                        </Col>
+                      })
+                      }
+                    </Row>
+                  </Checkbox.Group>
                 </Form.Item>
               </Form>
             </div>
@@ -225,6 +352,12 @@ export default function ModalBox() {
       </Select>
       {/*下面搜索框 */}
       <Search onSearch={onSearch} enterButton style={{ marginTop: '40px', marginLeft: '-120px', width: '300px' }} />
+      <Table
+                rowSelection={{
+                  type: selectionType,
+                  ...rowSelection,
+                }}
+                columns={columns} dataSource={data} />
     </div>
   )
   //Arrangement内容区
@@ -244,13 +377,24 @@ export default function ModalBox() {
         </Select>
         {/*下面搜索框 */}
         <Search onSearch={onSearch} enterButton style={{ marginTop: '40px', marginLeft: '-120px', width: '300px' }} />
+        <Table
+                rowSelection={{
+                  type: selectionType,
+                  ...rowSelection,
+                }}
+                columns={columns} dataSource={data} />
       </div>
     </div>
   )
   //Automatic内容区
   const Automatic = (
     <div style={{ height: '70vh', marginTop: '30px' }}>
-      Automatic
+      <Table
+                rowSelection={{
+                  type: selectionType,
+                  ...rowSelection,
+                }}
+                columns={columns} dataSource={data} />
     </div>
   )
   const done = (
@@ -280,23 +424,6 @@ export default function ModalBox() {
       content: done,
     },
   ];
-  const [current, setCurrent] = useState(0);
-
-  const next = () => {
-    setCurrent(current + 1);
-  };
-
-  const prev = () => {
-    setCurrent(current - 1);
-  };
-
-  //最后一页进行跳转
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  function but() {
-    //  history.go(0) 
-    setIsModalVisible(false);
-  }
-
   return (
     <>
 
@@ -307,19 +434,16 @@ export default function ModalBox() {
       </Steps>
       <div className="steps-content">{steps[current].content}</div>
       <div className="steps-action">
-        {current < steps.length - 1 && (
+        {current < steps.length - 2 && (
           <Button type="primary" onClick={() => next()}>
             下一页
           </Button>
         )}
-
-        {current === steps.length - 1 && (
-          <Button type="primary" onClick={() => but()
-          }>
+        {current === steps.length - 2 && (
+          <Button type="primary" >
             完成保存
           </Button>
         )}
-
         {current > 0 && (
           <Button
             style={{

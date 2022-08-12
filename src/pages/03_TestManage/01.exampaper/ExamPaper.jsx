@@ -1,7 +1,8 @@
-import { Button, Table, Modal ,Switch} from "antd";
+import { Button, Table, Modal ,Switch,Tag ,Popconfirm } from "antd";
 import React, { useEffect, useState } from "react";
 import { getExamPaperList } from "../../../api/testManage/examPaper";
 import ModalBox from "./ModalBox";
+import Style from './exampaper.module.less'
 export default function ExamPaper() {
   const [paperList, setPaperList] = useState([]);
   const [handleModal, setHandleModal] = useState(false);
@@ -30,7 +31,7 @@ export default function ExamPaper() {
       title: "试卷名称",
       dataIndex: "testName",
       key: "testName",
-      render: (text) => <p>{text}</p>,
+      render: (text) => 0
     },
     {
       title: "考试时长",
@@ -65,7 +66,23 @@ export default function ExamPaper() {
     {
       title: "操作",
       dataIndex: "operation",
-      render: () => <Button type="primary">编辑</Button>,
+      render: (_, record) => (
+        <span>
+          <Tag color="#2db7f5" className={Style.EditBtn} onClick={handleAdd}>
+            编辑
+          </Tag>
+
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => handleDelete(record.key)}
+            className={Style.DeleteBtn}
+          >
+            <Tag color="#f50" className={Style.DeleteBtn}>
+              删除
+            </Tag>
+          </Popconfirm>
+        </span>
+      ),
     },
   ];
 
@@ -96,9 +113,6 @@ export default function ExamPaper() {
             marginBottom: 16,
           }}
         >
-          <Button type="primary" disabled={!hasSelected} loading={loading}>
-            Reload
-          </Button>
           <Button
             onClick={handleAdd}
             type="primary"
@@ -106,13 +120,7 @@ export default function ExamPaper() {
           >
             新增
           </Button>
-          <span
-            style={{
-              marginLeft: 8,
-            }}
-          >
-            {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
-          </span>
+
         </div>
         <Table
           rowSelection={rowSelection}

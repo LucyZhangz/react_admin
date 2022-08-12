@@ -1,7 +1,15 @@
 import React from "react";
 import { HomeOutlined, UserOutlined } from "@ant-design/icons";
 import { Breadcrumb } from "antd";
+import { getMenuList } from "../api/menuList";
 export default function Bread() {
+  let breadList = [];
+
+  async function getMenu() {
+    const { data } = await getMenuList();
+    console.log(data);
+    // let res = data.children.find()
+  }
   return (
     <Breadcrumb>
       <Breadcrumb.Item href="#">

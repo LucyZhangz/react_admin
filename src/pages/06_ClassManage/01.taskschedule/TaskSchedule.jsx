@@ -1,4 +1,3 @@
-
 import { Button, Form, Input, Popconfirm, Table, Tag, Pagination, Modal, Switch } from 'antd';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
@@ -16,7 +15,7 @@ const EditableRow = ({ index, ...props }) => {
         </Form>
     );
 };
-const showTotal = (total) => `Total ${total} items`;
+//const showTotal = (total) => `Total ${total} items`;
 const EditableCell = ({
     title,
     editable,
@@ -35,14 +34,14 @@ const EditableCell = ({
         }
     }, [editing]);
 
-    const toggleEdit = () => {
-        setEditing(!editing);
-        form.setFieldsValue({
-            [dataIndex]: record[dataIndex],
-        });
-    };
+    // const toggleEdit = () => {
+    //     setEditing(!editing);
+    //     form.setFieldsValue({
+    //         [dataIndex]: record[dataIndex],
+    //     });
+    // };
     let childNode = children;
-
+  
     // if (editable) {
     //     childNode = editing ? (
     //         <Form.Item
@@ -85,18 +84,21 @@ const App = () => {
     ]);
     async function update() {
         let res = await arranging()
-        console.log(res);
-        setCurr(res.data.size)
-        setCur(res.data.total)
-        newres = res.data.records[0]
-        newres.key = newres.id
-
-        newres.arranging = newres.arrangingName.slice(0, 14)
-
-        setDataSource([newres])
+        res.data.records.map((item) => {
+            console.log(res.data.records[0].arrangingName);
+             item.key = item.id
+             item.arrangingName = res.data.records[0].arrangingName
+            item.arranging = res.data.records[0].arrangingName.slice(0, 14)
+            // item.examDesc = `<div>
+            // <Switch checkedChildren="开启" unCheckedChildren="关闭" defaultChecked />
+            // </div> `
+        })
+        console.log(res.data.records);
+        setDataSource(res.data.records)
     }
     // const [count, setCount] = useState(2);
     const handleDelete = (key) => {
+        console.log(key);
         const newData = dataSource.filter((item) => item.key !== key);
         setDataSource(newData);
     };
@@ -136,15 +138,11 @@ const App = () => {
 
         },
         {
-            key: 'deleted',
+            key: 'examDesc',
             title: '状态',
-            dataIndex: 'deleted',
+            dataIndex: 'examDesc',
             width: '10%',
-            render: (_, record) =>
-                <span >
-                    
-                </span>
-
+       
         },
         {
             title: '操作',
@@ -190,7 +188,6 @@ const App = () => {
     };
     return (
         <div>
-    
             <Button
                 onClick={handleAdd}
                 type="primary"
@@ -201,6 +198,7 @@ const App = () => {
                 新增
             </Button>
             <Table
+                scroll={{ y:'400px' }}
                 components={components}
                 rowClassName={() => 'editable-row'}
                 bordered
@@ -208,12 +206,12 @@ const App = () => {
                 columns={columns}
                 pagination={false}
             />
-
             <Pagination current={current} onChange={onChange} total={cur} pageSize={curr}></Pagination>
-            <Modal title="Basic Modal" visible={handleModal} footer={null} onCancel={handleClose}>
-                <ModalBox sethandleModal={sethandleModal} />
+            <Modal title="Basic Modal" visible={handleModal} footer={null} onCancel={handleClose} width={1000}>
+                {/* <ModalBox sethandleModal={sethandleModal} /> */}
+                <ModalBox  
+                sethandleModal={sethandleModal} dataSource={dataSource}   />
             </Modal>
-
         </div>
     );
 };
