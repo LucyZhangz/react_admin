@@ -104,15 +104,6 @@ const Plan = () => {
             item.examDesc = `<div>
             <Switch checkedChildren="开启" unCheckedChildren="关闭" defaultChecked />
             </div> `
-            // records[0].timeStart = records[0].timeStart.slice(0, 10)
-            // records[0].timeEnd = records[0].timeEnd.slice(0, 10)
-            // records[1].timeStart = records[1].timeStart.slice(0, 10)
-            // records[1].timeEnd = records[1].timeEnd.slice(0, 10)
-            // records[0].examType = records[0].name.slice(16, 20)
-            // records[1].examType = records[1].name.slice(20, 22)
-            // records[2].examType = records[2].name.slice(0, 10)
-            // records[3].examType = records[3].name.slice(0, 10)
-
         })
         console.log('records：', records)
         setarr(records)
