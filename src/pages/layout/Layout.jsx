@@ -9,24 +9,26 @@ const { Content } = Layout;
 
 export default function () {
   return (
-    <Layout>
+    <Layout style={{ height: "100vh" }}>
       {/* 侧边菜单栏 */}
+
       <NavMenu />
+
       <Layout className={style.siteLayout}>
         {/* 页面头部 */}
         <Header />
-        {/* tags标签 */}
-        <Tags />
         {/* 身体部分 */}
-        <Content
-          className={style.siteLayoutBackground}
-          style={{
-            padding: 10,
-            minHeight: 280,
-          }}
-        >
-          <Outlet />
-        </Content>
+        <div className="page-main" style={{ overflow: "auto", height: "100%" }}>
+          <Content
+            className={style.siteLayoutBackground}
+            style={{
+              padding: 10,
+              minHeight: 280,
+            }}
+          >
+            <Outlet />
+          </Content>
+        </div>
       </Layout>
     </Layout>
   );

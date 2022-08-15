@@ -9,13 +9,16 @@ import {
   Popconfirm,
   Modal,
   Radio,
+  Pagination,
 } from "antd";
 import { Link } from "react-router-dom";
-import ModalBox from "./ModalBox";
 import Style from "./question.module.less";
 import {
+  deleteTest,
+  getInitPage,
   getQusetionList,
   getSubjectList,
+  searchTest,
 } from "../../../api/testManage/question";
 import { getTypeTestList } from "../../../api/testManage/testType";
 const { Option, OptGroup } = Select;
@@ -24,25 +27,42 @@ export default function Question() {
   const [SubjectList, setSubjectList] = useState([]);
   const [typeList, setTypeList] = useState([]);
   const [handleModal, setHandleModal] = useState(false);
+  // 初始化分页数据
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const [total, settotal] = useState("");
+
   useEffect(() => {
-    getlist();
+    getlist(page, limit);
     getTypes();
   }, []);
-  async function getlist() {
-    let { data } = await getQusetionList();
-    console.log(data.records);
+  async function getlist(page, limit) {
+    let { data } = await getInitPage({
+      page,
+      limit,
+    });
+    console.log(data);
     data.records.map((item, index) => {
       item.key = item.id;
     });
     setContentList(data.records);
+    settotal(data.total)
   }
   async function getTypes() {
     let { data } = await getTypeTestList();
     setTypeList(data.records);
   }
+  function handleDelete(id){
+    handledeleteTest(id)
+  }
+  async function handledeleteTest(id){
+    await deleteTest([id])
+    location.reload()
+  }
   function handleAdd() {
     setHandleModal(true);
   }
+
   async function getPageContentByType(id) {
     let { data } = await getQusetionList(id);
     data.records.map((item, index) => {
@@ -67,39 +87,67 @@ export default function Question() {
     {
       title: "Action",
       key: "action",
-      render: (_, record) => (
-        <span>
-          {console.log(record.id)}
-          <Link to={`/addQuestion/${record.id}`}>
-            <Tag color="#2db7f5" className={Style.EditBtn} onClick={handleAdd}>
-              编辑
-            </Tag>
-          </Link>
+      render: (_, record) => {
+        return (
+          <span>
+            <Link
+              to={{
+                pathname: "/editQuestion",
+                search: `?data=${JSON.stringify(record)}`,
+                state: record,
+              }}
+            >
+              <Tag
+                color="#2db7f5"
+                className={Style.EditBtn}
+                onClick={handleAdd}
+              >
+                编辑
+              </Tag>
+            </Link>
 
-          <Popconfirm
-            title="Sure to delete?"
-            onConfirm={() => handleDelete(record.key)}
-            className={Style.DeleteBtn}
-          >
-            <Tag color="#f50" className={Style.DeleteBtn}>
-              删除
-            </Tag>
-          </Popconfirm>
-        </span>
-      ),
+            <Popconfirm
+              title="Sure to delete?"
+              onConfirm={() => handleDelete(record.key)}
+              className={Style.DeleteBtn}
+            >
+              <Tag color="#f50" className={Style.DeleteBtn}>
+                删除
+              </Tag>
+            </Popconfirm>
+          </span>
+        );
+      },
     },
   ];
-
+  const sizeArr = [5, 10, 15, 20];
   const onFinish = (values) => {
+    values.page = page,
+    values.limit = limit,
+    values.questionType = null
     console.log("Success:", values);
+    queryTest(values)
   };
 
+  async function queryTest(params){
+    let {data}  = await searchTest(params)
+    setContentList(data.records)
+  }
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
+
+  // 分页
+  const onChangePage = (page, limit) => {
+    console.log(page, limit);
+    setLimit(limit);
+    // setPage(page);
+    getlist(page, limit);
+  };
+
   async function getBygrade(params) {
     let { data } = await getSubjectList(params);
 
@@ -128,13 +176,7 @@ export default function Question() {
         >
           <Form.Item
             label="试题名"
-            name="testname"
-            rules={[
-              {
-                required: true,
-                message: "Please input your username!",
-              },
-            ]}
+            name="content"
           >
             <Input />
           </Form.Item>
@@ -226,15 +268,29 @@ export default function Question() {
           </Link>
         </div>
         <div className="bottomBox" style={{ marginTop: "20px" }}>
-          <Table columns={columns} dataSource={ContentList} />
-          <Modal
-            title="Basic Modal"
-            visible={handleModal}
-            footer={null}
-            onCancel={handleClose}
-          >
-            <ModalBox handleModal={setHandleModal} />
-          </Modal>
+          <Table
+            columns={columns}
+            dataSource={ContentList}
+            pagination={false}
+          />
+          {/* 分页器 */}
+          {/* <Pagination
+            onChange={onChangePage}
+            showLessItems
+            showSizeChanger
+            showQuickJumper
+            pageSizeOptions={sizeArr}
+          /> */}
+          <Pagination
+            showQuickJumper
+            onChange={onChangePage}
+            defaultCurrent={1}
+            total={total}
+            showTotal={(total) => `Total ${total} items`}
+            defaultPageSize={5}
+            showSizeChanger
+            pageSizeOptions={sizeArr}
+          />
         </div>
       </div>
     </div>

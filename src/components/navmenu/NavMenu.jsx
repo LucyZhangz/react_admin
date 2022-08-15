@@ -111,8 +111,8 @@ function getItem(label, key, icon, children, type) {
   }, [])
 
   return (
-    <Sider style={{ height: "100vh" }} trigger={null} collapsible collapsed={props.collapsed}>
-      <div className={style.logo}>
+    <Sider  className={style.navAside} trigger={null} collapsible collapsed={props.collapsed}>
+      <div className={style.logo}> 
         {props.collapsed ? (
           <img src={Logo} className={style.LogoImg} />
         ) : (

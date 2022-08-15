@@ -62,7 +62,7 @@ function LayoutHeader(props) {
           label:"基本资料",
         },
         {
-          key: "paddword",
+          key: "changepassword",
           label:'更换密码',
         },
         {

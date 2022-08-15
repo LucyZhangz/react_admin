@@ -2,6 +2,8 @@ import { Button, Form, Input, Popconfirm, Table, Tag, Pagination, Modal} from 'a
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import style from './department.module.less'
 import ModalBox from './ModalBox'
+import ModalEditBox from './EditModalBox'
+import {getDepartment,delDepartment} from '../../../api/Organization/department'
 const EditableContext = React.createContext(null);
 const EditableRow = ({ index, ...props }) => {
     const [form] = Form.useForm();
@@ -13,7 +15,6 @@ const EditableRow = ({ index, ...props }) => {
         </Form>
     );
 };
-const showTotal = (total) => `Total ${total} items`;
 const EditableCell = ({
     title,
     editable,
@@ -84,31 +85,42 @@ const EditableCell = ({
 };
 
 const App = () => {
-    const [dataSource, setDataSource] = useState([
-        {
-            key: '0',
-            name: 'Edward King 0',
-            age: '32',
-            address: 'London, Park Lane no. 0',
-        },
-        {
-            key: '1',
-            name: 'Edward King 1',
-            age: '32',
-            address: 'London, Park Lane no. 1',
-        },
-    ]);
-    const [count, setCount] = useState(2);
 
+    const [dataSource, setDataSource] = useState([]);
+    const [count, setCount] = useState(2);
+    async function getdepartment(){
+        let res = await getDepartment();
+        setDataSource(res.data)
+     }
+     dataSource.map((item,idx)=>{
+        item.key = item.id
+    })
+    // delDepartment 删除功能
+    async function deldepartment(id){
+        await delDepartment (id)
+    }
     const handleDelete = (key) => {
         const newData = dataSource.filter((item) => item.key !== key);
         setDataSource(newData);
-    };
+        deldepartment(key)
 
+    };
+    //编辑功能
+    const [handleEdit, sethandleEdit] = useState(false)
+    const [DepartmentData,setDepartmentData] = useState({})
+    function handleedit(e){
+        // console.log(e);
+        sethandleEdit(true)
+        setDepartmentData(e)
+    }
+    // console.log(DepartmentData);
+    function handleEditClose(){
+        sethandleEdit(false)
+    }
     const defaultColumns = [
         {
             title: '部门编码',
-            dataIndex: 'name',
+            dataIndex: 'relationCode',
             editable: true,
         },
         {
@@ -118,23 +130,30 @@ const App = () => {
         },
         {
             title: '上级部门名称',
-            dataIndex: 'age',
+            dataIndex: 'pidName',
         },
         {
             title: '层级关系编码',
-            dataIndex: 'age',
+            dataIndex: 'relationCode',
         },
         {
             title: '部门经理',
-            dataIndex: 'age',
+            dataIndex: 'managerName',
         },
         {
             title: '部门经理联系方式',
-            dataIndex: 'age',
+            dataIndex: 'phone',
         },
         {
             title: '状态',
-            dataIndex: 'age',
+            dataIndex: 'status',
+            render: function (text, record, index) {
+                let color = text ? ' #2db7f5' : '#f50'
+                let font = text ? '已启用' :'禁用' 
+
+                return <Tag color={color}>{font}</Tag>
+
+            }
         },
         {
             title: '操作',
@@ -142,7 +161,7 @@ const App = () => {
             render: (_, record) =>
                 <span >
 
-                    <Tag color="#2db7f5" className={style.EditBtn} onClick={handleAdd}>编辑</Tag>
+                    <Tag color="#2db7f5" className={style.EditBtn} onClick={() => handleedit(record)}>编辑</Tag>
 
                     <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.key)} className={style.DeleteBtn}>
                         <Tag color="#f50" className={style.DeleteBtn}>删除</Tag>
@@ -158,6 +177,7 @@ const App = () => {
     function handleClose(){
         sethandleModal(false);
     }
+
     const handleSave = (row) => {
         const newData = [...dataSource];
         const index = newData.findIndex((item) => row.key === item.key);
@@ -188,6 +208,9 @@ const App = () => {
             }),
         };
     });
+    useEffect(()=>{
+        getdepartment();
+    },[])
     return (
         <div>
             <Button
@@ -207,12 +230,15 @@ const App = () => {
                 columns={columns}
                 pagination={false}
             />
-            <Pagination size="small" total={50} showSizeChanger showQuickJumper />
+            <Pagination size="small" total={1} showSizeChanger showQuickJumper />
 
-            <Modal title="Basic Modal" visible={handleModal} footer={null} onCancel={handleClose}>
-                <ModalBox sethandleModal={sethandleModal} />
+            <Modal title="新增部门" visible={handleModal} footer={null} onCancel={handleClose}>
+                <ModalBox sethandleModal={sethandleModal}  />
             </Modal>
-
+                {/* ModalEditBox */}
+            <Modal title="编辑角色" visible={handleEdit} footer={null} onCancel={handleEditClose}>
+                <ModalEditBox sethandleEdit={sethandleEdit} DepartmentData={DepartmentData} />
+            </Modal>
         </div>
     );
 };

@@ -4,7 +4,7 @@ import {useNavigate} from 'react-router-dom'
 
 import Style from "./login.module.css";
 import leftBg from "./images/login-box-bg.svg";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { userlogin} from "../../api/login";
 import Theme from '../../components/ThemeCheck/Theme'
@@ -16,17 +16,13 @@ export default function login() {
   const myRef = React.useRef();
   const onFinish =async(values) => {
     console.log("Finish:", values);
-     await userlogin({
-      username: 'admin',
-      password: 123456,
-      captcha: values.captcha,
-    }).then((res) => {
+      await userlogin(values).then((res) => {
       console.log(res);
       localStorage.setItem('VITE_ADMIN_TOKEN',res.data.accessToken)
       navigate('/', {
         replace: false,
       }) 
-    });
+    })
   };
   return (
     <div className={Style.loginContainer}>

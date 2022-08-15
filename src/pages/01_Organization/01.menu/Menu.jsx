@@ -1,7 +1,9 @@
-import { Button, Form, Input, Popconfirm, Table, Tag, Pagination, Modal} from 'antd';
+import { Button, Form, Input, Popconfirm, Table, Tag, Pagination, Modal } from 'antd';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import style from './meun.module.less'
 import ModalBox from './ModalBox'
+import EditModalBox from './EditModalBox'
+import { getMenu, delMenu } from '../../../api/Organization/menu';
 const EditableContext = React.createContext(null);
 const EditableRow = ({ index, ...props }) => {
     const [form] = Form.useForm();
@@ -84,31 +86,60 @@ const EditableCell = ({
 };
 
 const App = () => {
-    const [dataSource, setDataSource] = useState([
-        {
-            key: '0',
-            name: 'Edward King 0',
-            age: '32',
-            address: 'London, Park Lane no. 0',
-        },
-        {
-            key: '1',
-            name: 'Edward King 1',
-            age: '32',
-            address: 'London, Park Lane no. 1',
-        },
-    ]);
-    const [count, setCount] = useState(2);
+    const [dataSource, setDataSource] = useState([]);
+    const items = []
+    const getmenu = async () => {
+        let res = await getMenu();
+        console.log(res);
+        let resMenu = transformMenu(res.data[0].children)
+        resMenu.map((item) => {
+            items.push(item)
+        })
+        setDataSource(items);
+        // console.log("1111111111111111111", items);
+    }
+
+    function transformMenu(data) {
+        const res = data.map((item) => {
+            const obj = {
+                title: item.title,
+                id: item.id,
+                type: item.type,
+                url: item.url,
+                icon: item.icon,
+                key: item.id,
+                orderNum: item.orderNum,
+                checked: item.checked,
+                pid:item.pid
+            }
+            if (item.children && item.children.length) {
+                obj.children = transformMenu(item.children)
+            } else if(item.pidName) {
+                obj.name = item.pidName
+            }
+            return obj
+        })
+        return res
+    }
+
+    // 删除数据请求参数
+    async function DelMenu(id) {
+        await delMenu(id)
+    }
 
     const handleDelete = (key) => {
         const newData = dataSource.filter((item) => item.key !== key);
         setDataSource(newData);
+        DelMenu(key);
+        console.log(key);
     };
-
+    useEffect(() => {
+        getmenu();
+    }, [])
     const defaultColumns = [
         {
             title: '菜单名称',
-            dataIndex: 'name',  
+            dataIndex: 'title',
             editable: true,
         },
         {
@@ -117,11 +148,22 @@ const App = () => {
         },
         {
             title: '图标',
-            dataIndex: 'name',
+            dataIndex: 'icon',
         },
         {
             title: '类型',
-            dataIndex: 'name',
+            dataIndex: 'type',
+            render: function (text, record, index) {
+                let color = text === 1 ? 'magenta' : 'cyan'
+                let font = text === 1 ? '目录' : '菜单'
+                if (text === 3) {
+                    color = 'geekblue';
+                    font = '按钮'
+                }
+
+                return <Tag color={color}>{font}</Tag>
+
+            }
         },
         {
             title: '父级名称',
@@ -129,24 +171,27 @@ const App = () => {
         },
         {
             title: '排序',
-            dataIndex: 'name',
-        },
-        {
-            title: '资源标识',
-            dataIndex: 'name',
+            dataIndex: 'orderNum',
         },
         {
             title: '状态',
-            dataIndex: 'name',
+            dataIndex: 'checked',
+            render: function (text, record, index) {
+                let color = text ? '#f50' : '#2db7f5'
+                let font = text ? '禁用' : '已启用'
+
+                return <Tag color={color}>{font}</Tag>
+
+            }
         },
-        
+
         {
             title: 'operation',
             dataIndex: 'operation',
             render: (_, record) =>
                 <span >
 
-                    <Tag color="#2db7f5" className={style.EditBtn} onClick={handleAdd}>编辑</Tag>
+                    <Tag color="#2db7f5" className={style.EditBtn} onClick={() => handleEdit(record)}>编辑</Tag>
 
                     <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.key)} className={style.DeleteBtn}>
                         <Tag color="#f50" className={style.DeleteBtn}>删除</Tag>
@@ -158,9 +203,22 @@ const App = () => {
     const handleAdd = () => {
         sethandleModal(true);
     };
-    
-    function handleClose(){
+
+    function handleClose() {
         sethandleModal(false);
+    }
+    // 编辑事件
+    const [handleEditModal, sethandleEditModal] = useState(false)
+    // 获取当前行的Id值
+    const [hadleEditId,sethadleEditId] = useState(undefined)
+    function handleEdit(e) {
+        sethandleEditModal(true)
+        // console.log(e);
+        sethadleEditId(e)
+    }
+    //  让编辑模态框默认保持关闭
+    function handleEditClose() {
+        sethandleEditModal(false)
     }
     const handleSave = (row) => {
         const newData = [...dataSource];
@@ -211,10 +269,13 @@ const App = () => {
                 columns={columns}
                 pagination={false}
             />
-            <Pagination size="small" total={50} showSizeChanger showQuickJumper />
-
-            <Modal title="Basic Modal" visible={handleModal} footer={null} onCancel={handleClose}>
+            <Pagination size="small" total={9} showSizeChanger showQuickJumper />
+            {/* EditModalBox */}
+            <Modal title="菜单新增" visible={handleModal} footer={null} onCancel={handleClose}>
                 <ModalBox sethandleModal={sethandleModal} />
+            </Modal>
+            <Modal title="菜单编辑" visible={handleEditModal} footer={null} onCancel={handleEditClose}>
+                <EditModalBox sethandleEditModal={sethandleEditModal} hadleEditId={hadleEditId}   />
             </Modal>
 
         </div>

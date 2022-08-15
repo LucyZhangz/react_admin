@@ -14,6 +14,7 @@ import Department from "../pages/01_Organization/03.department/Department";
 import Staff from "../pages/02_WorkersManage/staff/Staff";
 import ExamPaper from "../pages/03_TestManage/01.exampaper/ExamPaper";
 import Question from "../pages/03_TestManage/02.question/Question";
+import AddQuestion from '../pages/03_TestManage/02.question/AddPage'
 import EditQuestion from '../pages/03_TestManage/02.question/EditPage'
 import TypeTest from "../pages/03_TestManage/03.typetest/TypeTest";
 import Plan from "../pages/04_ExamManage/01.plan/Plan";
@@ -53,8 +54,8 @@ const routes = () => (
         {/* 试题管理 */}
         <Route path="/dlTest" element={<ExamPaper />}></Route>
         <Route path="/dlQuestionBank" element={<Question />}></Route>
-        <Route path="/addQuestion" element={<EditQuestion />}></Route>
-        <Route path="/addQuestion/:id" element={<EditQuestion />}></Route>
+        <Route path="/addQuestion" element={<AddQuestion />}></Route>
+        <Route path="/editQuestion" element={<EditQuestion />}></Route>
         <Route path="/dlQuestionType" element={<TypeTest />}></Route>
         {/* 考试管理 */}
         <Route path="/dlExamPlan" element={<Plan />}></Route>
