@@ -1,6 +1,7 @@
-import React from "react";
-import { Button, Checkbox, Form, Input } from "antd";
+import React, { useState } from "react";
+import { Button, Checkbox, Form, Input ,message } from "antd";
 import Style from "./Changepassword.module.css";
+import { user } from '../../api/classManage/taskschedule'
 export default function Changetpassword() {
     const onFinish = (values) => {
         console.log("Success:", values);
@@ -8,8 +9,23 @@ export default function Changetpassword() {
     const onFinishFailed = (errorInfo) => {
         console.log("Failed:", errorInfo);
     };
+    const [value, setValue] = useState('')
+    const [pass, setpass] = useState('')
+    const [confirm, setconfirm] = useState('')
+    async function btn() {
+        if (value !== pass) {
+            await user({
+                newPwd: value,
+                oldPwd: pass,
+                rePass: confirm
+            })
+        }else{
+            message.info('新旧密码不能相同')  
+        }
+
+    }
     return (
-        <div style={{minWidth:'800px'}}>
+        <div style={{ minWidth: '800px' }}>
             <Form
                 name="basic"
                 labelCol={{
@@ -26,13 +42,23 @@ export default function Changetpassword() {
                 autoComplete="off"
             >
                 <Form.Item label="旧密码" name="username">
-                    <Input  style={{width:'300px',height:'50px'}}/>
+                    <Input
+                        type='password'
+                        onChange={event => setValue(event.target.value)}
+                        style={{ width: '300px', height: '50px' }} />
                 </Form.Item>
                 <Form.Item label="新密码" name="password">
-                    <Input style={{width:'300px',height:'50px'}} />
+                    <Input
+                        type='password'
+                        onChange={event => setpass(event.target.value)}
+                        style={{ width: '300px', height: '50px' }} />
                 </Form.Item>
-                <Form.Item label="确认密码" name="confirm">
-                    <Input  style={{width:'300px',height:'50px'}}/>
+                <Form.Item
+                    label="确认密码" name="confirm">
+                    <Input
+                        type='password'
+                        onChange={event => setconfirm(event.target.value)}
+                        style={{ width: '300px', height: '50px' }} />
                 </Form.Item>
                 <Form.Item
                     wrapperCol={{
@@ -40,7 +66,9 @@ export default function Changetpassword() {
                         span: 16,
                     }}
                 >
-                    <Button type="primary" htmlType="submit"  style={{width:'300px',height:'50px'}}>
+                    <Button
+                        onClick={btn}
+                        type="primary" htmlType="submit" style={{ width: '300px', height: '50px' }}>
                         保存
                     </Button>
                 </Form.Item>

@@ -1,28 +1,61 @@
 import React, { useEffect, useState } from "react";
-import { Space, Table, Tag, Button,Popconfirm,Modal  } from "antd";
-import { getTypeTestList } from "../../../api/testManage/testType";
+import { Table, Tag, Button, Popconfirm, Modal, Pagination } from "antd";
+import {
+  deleteTypeTestList,
+  getTypeTestList,
+} from "../../../api/testManage/testType";
 import ModalBox from "./ModalBox";
-import Style from './typetest.module.less'
+import EditBox from "./EditBox";
+import Style from "./typetest.module.less";
 export default function TypeTest() {
   const [List, setList] = useState([]);
   const [handleModal, setHandleModal] = useState(false);
-  async function getlist() {
-    let { data } = await getTypeTestList();
+  const [handleEditModal, setHandleEditModal] = useState(false);
+  const [editRecord, setEditRecord] = useState();
+  const [total, settotal] = useState("");
+  // 初始化分页数据
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const sizeArr = [5, 10, 15, 20];
+  async function getlist(page, limit) {
+    let { data } = await getTypeTestList(page, limit);
     console.log(data.records);
     data.records.map((item) => {
       item.key = item.id;
     });
     setList(data.records);
+    settotal(data.total);
   }
   const handleAdd = () => {
     setHandleModal(true);
   };
   useEffect(() => {
-    getlist();
+    getlist(page, limit);
   }, []);
   function handleClose() {
     setHandleModal(false);
   }
+  function handleCloseEdit() {
+    setHandleEditModal(false);
+  }
+  //点击编辑按钮弹出编辑框
+  function handleEdit(record) {
+    setHandleEditModal(true);
+    setEditRecord(record);
+  }
+  // 分页
+  const onChangePage = (page, limit) => {
+    console.log(page, limit);
+    setLimit(limit);
+    // setPage(page);
+    getlist(page, limit);
+  };
+  async function handleDelete(val) {
+    console.log(val);
+    let res = await deleteTypeTestList([val]);
+    location.reload();
+  }
+
   const columns = [
     {
       title: "类型名称",
@@ -46,8 +79,12 @@ export default function TypeTest() {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <span style={{width:'200px'}}>
-          <Tag color="#2db7f5" className={Style.EditBtn} onClick={handleAdd}>
+        <span style={{ width: "200px" }}>
+          <Tag
+            color="#2db7f5"
+            className={Style.EditBtn}
+            onClick={() => handleEdit(record)}
+          >
             编辑
           </Tag>
 
@@ -64,26 +101,48 @@ export default function TypeTest() {
       ),
     },
   ];
- 
 
   return (
     <div>
-       <Button
-            onClick={handleAdd}
-            type="primary"
-            style={{ marginLeft: "10px" }}
-          >
-            新增
-          </Button>
-      <Table columns={columns} dataSource={List} />
+      <Button
+        onClick={handleAdd}
+        type="primary"
+        style={{ marginLeft: "10px", marginBottom: "20px" }}
+      >
+        新增
+      </Button>
+      <Table columns={columns} dataSource={List} pagination={false} />
+      <Pagination
+        showQuickJumper
+        onChange={onChangePage}
+        defaultCurrent={1}
+        defaultPageSize={5}
+        showSizeChanger
+        pageSizeOptions={sizeArr}
+        total={total}
+        showTotal={(total) => `Total ${total} items`}
+      />
       <Modal
-          title="Basic Modal"
-          visible={handleModal}
-          footer={null}
-          onCancel={handleClose}
-        >
-          <ModalBox handleModal={setHandleModal} />
-        </Modal>
+        title="Basic Modal"
+        visible={handleModal}
+        footer={null}
+        onCancel={handleClose}
+        destroyOnClose
+      >
+        <ModalBox sethandleModal={setHandleModal} />
+      </Modal>
+      <Modal
+        title="Edit Modal"
+        visible={handleEditModal}
+        footer={null}
+        onCancel={handleCloseEdit}
+        destroyOnClose
+      >
+        <EditBox
+          setHandleEditModal={setHandleEditModal}
+          editRecord={editRecord}
+        />
+      </Modal>
     </div>
   );
 }

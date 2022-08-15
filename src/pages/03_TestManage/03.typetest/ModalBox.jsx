@@ -1,12 +1,7 @@
-import {
-  Button,
-  Form,
-  Input,
-} from "antd";
+import { Button, Form, Input } from "antd";
 import React, { useState } from "react";
 import { addTypeTestList } from "../../../api/testManage/testType";
 import Style from "./typeTest.module.less";
-
 const layout = {
   labelCol: {
     span: 8,
@@ -15,11 +10,9 @@ const layout = {
     span: 16,
   },
 };
-
 const onFinishFailed = (errorInfo) => {
   console.log("Failed:", errorInfo);
 };
-
 
 const App = (props) => {
   const [current, setCurrent] = useState(0);
@@ -33,16 +26,20 @@ const App = (props) => {
   };
 
   const onFinish = (values) => {
-    addList(values)
+    addList(values);
+    console.log(props);
+    props.sethandleModal(false);
+    location.reload();
   };
-  async function addList(params){
-    let res = await addTypeTestList(params)
+  async function addList(params) {
+    let res = await addTypeTestList(params);
     console.log(res);
   }
- 
+
   return (
     <>
       <Form
+        preserve={false}
         name="basic"
         labelCol={{
           span: 8,
@@ -71,11 +68,11 @@ const App = (props) => {
         </Form.Item>
         <Form.Item
           label="备注"
-          name="notes"
+          name="remark"
           rules={[
             {
               required: true,
-              message: "Please input notes!",
+              message: "Please input remark!",
             },
           ]}
         >

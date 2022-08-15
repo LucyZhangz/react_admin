@@ -1,9 +1,10 @@
 import { Button, Form, Input, Popconfirm, Table, Tag, Pagination, Modal, Switch } from 'antd';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
+import Editbox from './Editbox'
 import style from './taskschedule.module.less'
 import ModalBox from './ModalBox'
-import { arranging } from '../../../api/classManage/taskschedule'
+import { arranging, dele } from '../../../api/classManage/taskschedule'
 const EditableContext = React.createContext(null);
 const EditableRow = ({ index, ...props }) => {
     const [form] = Form.useForm();
@@ -41,7 +42,7 @@ const EditableCell = ({
     //     });
     // };
     let childNode = children;
-  
+
     // if (editable) {
     //     childNode = editing ? (
     //         <Form.Item
@@ -79,99 +80,143 @@ const App = () => {
     useEffect(() => {
         update()
     }, [])
-    const [dataSource, setDataSource] = useState([
-
-    ]);
+    //获取列表
     async function update() {
-        let res = await arranging()
-        res.data.records.map((item) => {
+        let res = await arranging(limit, page)
+        settotal(res.data.total)
+        //遍历列表
+        res.data.records.forEach((item) => {
             console.log(res.data.records[0].arrangingName);
-             item.key = item.id
-             item.arrangingName = res.data.records[0].arrangingName
+            item.key = item.id;
             item.arranging = res.data.records[0].arrangingName.slice(0, 14)
-            // item.examDesc = `<div>
-            // <Switch checkedChildren="开启" unCheckedChildren="关闭" defaultChecked />
-            // </div> `
         })
         console.log(res.data.records);
         setDataSource(res.data.records)
     }
-    // const [count, setCount] = useState(2);
-    const handleDelete = (key) => {
-        console.log(key);
+    //删除单个事件
+    const handleDelete = async (key) => {
+        console.log([key.toString()]);
+        await dele([key.toString()])
+        onEscCan()
+        //  console.log(key);
         const newData = dataSource.filter((item) => item.key !== key);
         setDataSource(newData);
     };
+    const editor = (key) => {
+        sethandleEditModal(true)
+        console.log(key);
+        console.log(dataSource);
+        let newdata = dataSource.find((item) => {
+            return item.id == key
+        })
+        if (key) {
+            setnewwarr(newdata)
+            setnewdata({
+                arrid: newdata.id,
+                termId: newdata.termId
+            })
+        }
+    };
+    const [newwarr, setnewwarr] = useState('')
+    const [newdata, setnewdata] = useState('')
     const columns = [
         {
             key: 'arrangingName',
             title: '排课计划',
             dataIndex: 'arrangingName',
             width: '20%',
-            editable: true,
+            // editable: true,
+
         },
         {
             key: 'arranging',
             title: '学期',
             dataIndex: 'arranging',
+            defaultSortOrder: 'descend',
+            render: text => <p>{
+                text
+            }</p>
         },
         {
             key: 'weekDayNum',
             title: '周上课天数',
             dataIndex: 'weekDayNum',
+            defaultSortOrder: 'descend',
+            render: text => <p>{
+                text
+            }</p>
         },
 
         {
             key: 'amNum',
             title: '上午上课天数',
             dataIndex: 'amNum',
+            defaultSortOrder: 'descend',
+            render: text => <p>{
+                text
+            }</p>
         },
         {
             key: 'pmNum',
             title: '下午上课天数',
             dataIndex: 'pmNum',
+            defaultSortOrder: 'descend',
+            render: text => <p>{
+                text
+            }</p>
         },
         {
             key: 'nightNum',
             title: '晚上课天数',
             dataIndex: 'nightNum',
-
+            defaultSortOrder: 'descend',
+            render: text => <p>{
+                text
+            }</p>
         },
-        {
-            key: 'examDesc',
+        {   //没有状态值
+            key: 'pmNum',
             title: '状态',
-            dataIndex: 'examDesc',
+            dataIndex: 'pmNum',
+            defaultSortOrder: 'descend',
+            sorter: (a, b) => a.status - b.status,
             width: '10%',
-       
+            render: (_, { pmNum } = record) =>
+            (<p>
+                <Switch checkedChildren={pmNum == 3 ? '在校' : '毕业'} defaultChecked={pmNum == 3}
+                />
+            </p>)
         },
         {
             title: '操作',
+            key: 'operation',
             dataIndex: 'operation',
+            defaultSortOrder: 'descend',
             render: (_, record) =>
                 <span >
-                    <Tag color="#2db7f5" className={style.EditBtn} onClick={handleAdd}>编辑</Tag>
+                    <Tag color="#2db7f5" type="primary" danger
+                        onClick={() => editor(record.key)}>编辑</Tag>
+                    <Popconfirm title="确认删除吗?"
 
-                    <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.key)} className={style.DeleteBtn}>
+                        onConfirm={() => handleDelete(record.key)} className={style.DeleteBtn}>
                         <Tag color="#f50" className={style.DeleteBtn}>删除</Tag>
                     </Popconfirm>
                 </span>
         },
     ];
     const [handleModal, sethandleModal] = useState(false)
-    const handleAdd = () => {
-        sethandleModal(true);
-    };
+    const [handleEditModal, sethandleEditModal] = useState(false)
+
     function handleClose() {
         sethandleModal(false);
+        // Modal.destroyAll();
     }
-    // const handleSave = (row) => {
-    //     const newData = [...dataSource];
-    //     const index = newData.findIndex((item) => row.key === item.key);
-    //     const item = newData[index];
-    //     newData.splice(index, 1, { ...item, ...row });
-    //     setDataSource(newData);
-    // };
-
+    function handleAdd() {
+        sethandleModal(true);
+    }
+    function handleEdit() {
+        sethandleEditModal(false);
+    }
     const components = {
         body: {
             row: EditableRow,
@@ -179,13 +224,43 @@ const App = () => {
         },
     };
     //分页数据fen
-    const [current, setCurrent] = useState(1);
-    const [curr, setCurr] = useState(1);
-    const [cur, setCur] = useState(1);
-    const onChange = (page) => {
-        console.log(page);
-        setCurrent(page);
+    //分页内容
+    //表格数据
+    const [dataSource, setDataSource] = useState([
+    ]);
+    // const [anfin, setanfin] = useState('')
+    const [limit, setLimit] = useState(10)
+    const [page, setpage] = useState(1)
+    const [total, settotal] = useState('')
+    const onEscCan = async (page, limit) => {
+        console.log(page, limit);
+        setLimit(limit)
+        setpage(page)
+        let anfin = await arranging(limit, page)
+        console.log(anfin);
+        anfin.data.records.forEach((item) => {
+            item.key = item.id
+        })
+        setDataSource(anfin.data.records)
     };
+    //多选删除事件
+    const [selectionType, setSelectionType] = useState('checkbox');
+    const rowSelection = {
+        onChange: (selectedRowKeys, selectedRows) => {
+            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+            let a = []
+            selectedRowKeys.map((item) => {
+                a.push(item)
+            })
+            setdeleItem(a)
+        },
+    };
+    const [deleItem, setdeleItem] = useState([])
+    //点击多个删除按钮
+    async function delectAll() {
+        await dele(deleItem)
+        onEscCan()
+    }
     return (
         <div>
             <Button
@@ -193,12 +268,27 @@ const App = () => {
                 type="primary"
                 style={{
                     marginBottom: 16,
+                    marginRight: '10px'
                 }}
             >
                 新增
             </Button>
+            <Button
+                onClick={delectAll}
+                type="primary"
+                style={{
+                    marginBottom: 16,
+                }}
+            >
+                删除
+            </Button>
             <Table
-                scroll={{ y:'400px' }}
+                rowSelection={{
+                    type: selectionType,
+                    ...rowSelection,
+                }}
+
+                scroll={{ y: '400px' }}
                 components={components}
                 rowClassName={() => 'editable-row'}
                 bordered
@@ -206,12 +296,26 @@ const App = () => {
                 columns={columns}
                 pagination={false}
             />
-            <Pagination current={current} onChange={onChange} total={cur} pageSize={curr}></Pagination>
-            <Modal title="Basic Modal" visible={handleModal} footer={null} onCancel={handleClose} width={1000}>
-                {/* <ModalBox sethandleModal={sethandleModal} /> */}
-                <ModalBox  
-                sethandleModal={sethandleModal} dataSource={dataSource}   />
-            </Modal>
+            <Pagination
+                onChange={onEscCan}
+                total={total}
+                showSizeChanger
+                showQuickJumper
+                showTotal={(total) => `Total ${total} items`}
+            />
+            <div>
+                <Modal title="Basic Modal" visible={handleModal} footer={null} onCancel={handleClose} width={1000} destroyOnClose >
+                    <ModalBox
+                        sethandleModal={sethandleModal} handleClose={handleClose} dataSource={dataSource} newdata={newdata} newwarr={newwarr}
+                    />
+                </Modal>
+                <Modal title="Basic Modal" visible={handleEditModal} footer={null} onCancel={handleEdit} width={1000} destroyOnClose  >
+                    {/* <ModalBox sethandleModal={sethandleModal} /> */}
+                    <Editbox newdata={newdata} newwarr={newwarr}
+                        dataSource={dataSource} handleClose={handleEdit}
+                        sethandleEditModal={sethandleEditModal} />
+                </Modal>
+            </div>
         </div>
     );
 };

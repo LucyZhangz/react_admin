@@ -1,13 +1,13 @@
-import { Button, message, Steps } from 'antd';
-import React, { useState } from 'react';
-import { arrang, list, add } from '../../../api/classManage/taskschedule'
+import { Button, message, Steps, } from 'antd';
+import { Modal } from 'antd'
+import React, { useState, useRef } from 'react';
+import { arrang, list, add, dlArrGrade, listByPage, update } from '../../../api/classManage/taskschedule'
 import { DownOutlined } from '@ant-design/icons';
 //tab1的多选按钮
 import { Checkbox, Col, Row } from 'antd';
 import {
   Dropdown,
   Menu,
-  Modal,
   Tabs,
   Cascader,
   DatePicker,
@@ -28,13 +28,28 @@ import { useEffect } from 'react';
 import { useWatch } from 'antd/lib/form/Form';
 export default function ModalBox(props) {
   useEffect(() => {
-    // keygen()
-    console.log(props.dataSource[0].createId);
+    // if (props.newdata) {
+    //   keygen()
+    //   //判断有没有
+    //   console.log(props);
+    // }
+
+
   }, [])
   // async function keygen() {
-  //   let res = await arrang()
+  //   let res = await dlArrGrade(
+  //     props.newdata
+  //   )
   //   console.log(res);
+  //   newres(res)
+  //   setweekName(props.newwarr.weekDayNum)
+  //   setInMorning(props.newwarr.amNum)
+  //   setInAfternoon(props.newwarr.pmNum)
+  //   setEvening(props.newwarr.nightNum)
+  //   setFirstName(props.newwarr.arrangingName)
   // }
+
+  const [res, newres] = useState([]);
   // information 内容区
   const { Step } = Steps;
   const { Search } = Input;
@@ -48,43 +63,71 @@ export default function ModalBox(props) {
   const onSearch = (value) => console.log(value);
   //tab栏 切换 
   const { TabPane } = Tabs;
-
   const onChange = (key) => {
     console.log(key);
   };
-  // // information 表格内容区 表格头部
+  // information 表格内容区 表格头部
   const columns = [
     {
-      title: '教学名称',
-      dataIndex: 'name',
+      title: '教师名称',
+      dataIndex: 'teacherName',
+      key: 'teacherName',
+      render: text => <p>{
+        text
+      }</p>
     },
     {
       title: '课程名称',
-      dataIndex: 'chinese',
+      dataIndex: 'courseName',
+      key: 'courseName',
       sorter: {
         compare: (a, b) => a.chinese - b.chinese,
         multiple: 3,
       },
+      render: text => <p>{
+        text
+      }</p>
     },
     {
       title: '班级名称',
-      dataIndex: 'math',
+      dataIndex: 'className',
+      key: 'className',
       sorter: {
         compare: (a, b) => a.math - b.math,
         multiple: 2,
       },
+      render: text => <p>{
+        text
+      }</p>
+    },
+    {
+      title: '教师名称',
+      dataIndex: 'roomName',
+      key: 'roomName',
+      sorter: {
+        compare: (a, b) => a.math - b.math,
+        multiple: 2,
+      },
+      render: text => <p>{
+        text
+      }</p>
     },
     {
       title: '周课时(编辑)',
-      dataIndex: 'english',
+      key: 'courseType',
+      dataIndex: 'courseType',
       sorter: {
         compare: (a, b) => a.english - b.english,
         multiple: 1,
       },
+      render: text => <p>{
+        text
+      }</p>
     },
   ];
   // information 表格内容区的
   const data = [
+
     {
       key: '1',
       name: 'John Brown',
@@ -122,6 +165,7 @@ export default function ModalBox(props) {
       console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
     },
   };
+
   //表单头部 引入教学数据的点击事件
   const setAgeSort = () => {
     setSortedInfo({
@@ -131,8 +175,8 @@ export default function ModalBox(props) {
   };
   //tab1的下拉菜单的事件
   let tab = []
-  let content = props.dataSource.map((item1) => {
-    tab.push({ 'label': item1.arranging, 'key': item1.key })
+  props.dataSource.map((item) => {
+    tab.push({ 'label': item.arranging, 'key': item.key })
   })
   //tab1的下拉菜单
   const menu = (
@@ -145,28 +189,40 @@ export default function ModalBox(props) {
   const [show, setshow] = useState(false)
   //tab1下拉菜单的点击事件
   async function down() {
+    console.log(props.dataSource[0].termId);
     let xunlist = await list(props.dataSource[0].termId)
     setshow(true)
-    settitle(xunlist.data)
-    console.log(xunlist);
+    console.log('@@@', res);
+    if (props.newdata) {
+      settitle(res.data)
+    } else {
+      settitle(xunlist.data)
+    }
+    // 筛选出来默认被选中的班级
+    if (props.newdata) {
+      const checkedGradeArr = res.data.filter(item => item.status == 1).map(item => item.gradeId)
+      setGrade(checkedGradeArr)
+      // 设置表单的默认值
+      formRef.current.setFieldsValue({
+        grade: checkedGradeArr
+      })
+    }
   }
   const [title, settitle] = useState([]);
-
   //获取input的框里面的值
   //排课计划名称
   const [firstName, setFirstName] = useState('');
-  const [Semester, setSemester] = useState('1');
-
+  //一周
   const [weekName, setweekName] = useState('');
   //上午
   const [InMorning, setInMorning] = useState('');
-  //下
+  //下午
   const [InAfternoon, setInAfternoon] = useState('');
   //晚上
   const [Evening, setEvening] = useState('');
-  //
+  //多选框
   const [Years, setYears] = useState('');
-  //多选框的点击事件
+  //多选框的点击事
   function multi(key) {
     setYears(key)
   }
@@ -175,14 +231,11 @@ export default function ModalBox(props) {
     setCurrent(current - 1);
   };
   //最后一页进行跳转
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  // function but() {
-  //   //  history.go(0) 
-  //   setIsModalVisible(false);
-  // }
+  // const [isModalVisible, setIsModalVisible] = useState(false);
   //点击第一个下一页发送axios新增请求
   const next = async () => {
-    if (current == 0) {
+      console.log(InMorning,InAfternoon, weekName,Evening);
+    if (current == 0&&weekName<7&&InMorning<=4&&InAfternoon<=4&&Evening<=3) {
       let a = await add({
         amNum: InMorning,
         arrangingName: firstName,
@@ -200,14 +253,65 @@ export default function ModalBox(props) {
           marginTop: '20vh',
         },
       });
+      if (current == 0 && props.newdata) {
+        let inputRef = await update({
+          amNum: InMorning,
+          arrangingName: firstName,
+          gradeIds: [],
+          id: props.newwarr.id,
+          nightNum: Evening,
+          pmNum: InAfternoon,
+          termId: props.newwarr.termId,
+          weekDayNum: weekName,
+        })
+        //获取表格内容
+        let inputlist = await listByPage({
+          arrId: props.newdata.arrid,
+          courseName: '',
+          limit: limit,
+          page: page,
+        })
+        console.log(inputlist);
+        settotal(inputlist.data.total)
+        setanfin(inputlist.data.records)
+        console.log(
+          inputlist.data.total
+        );
+      }
+    }else{
+      message.info('一周最多7天 上午最大4节课 下午最大4节课 晚上最多3节课 检测输入不符合要求，请重新输入');
     }
     setCurrent(current + 1);
-    console.log(current);
-    if(current==3){
-      alert('111')
-      setIsModalVisible(false);
+
+    if (current == 2) {
+      // props.sethandleModal(false)
+      props.handleClose()
     }
+
   };
+  //分页内容
+  //表格数据
+  const [anfin, setanfin] = useState('')
+  const [limit, setLimit] = useState(10)
+  const [page, setpage] = useState(1)
+  const [total, settotal] = useState('')
+  const onEscCan = async (page, limit) => {
+    console.log(page, limit);
+    setLimit(limit)
+    setpage(page)
+    //获取列表内容
+    let anfin = await listByPage({
+      arrId: props.newdata.arrid,
+      courseName: '',
+      limit: limit,
+      page: page,
+    })
+    console.log(anfin);
+    setanfin(anfin.data.records)
+  };
+  // 获取默认选中的班级
+  const [grade, setGrade] = useState([])
+  const formRef = useRef();
   const information = (
     <div>
       <div>
@@ -215,6 +319,9 @@ export default function ModalBox(props) {
           <TabPane tab="基本信息设置" key="1">
             <div>
               <Form
+                name="basic"
+                preserve={false}
+                ref={formRef}
                 labelCol={{
                   span: 4,
                 }}
@@ -224,15 +331,28 @@ export default function ModalBox(props) {
                 layout="horizontal"
                 initialValues={{
                   size: componentSize,
+                  grade: props.newdata ? grade : ''
+
                 }}
                 onValuesChange={onFormLayoutChange}
                 size={componentSize}
               >
-                <Form.Item label="计划名称">
+                <Form.Item label="计划名称"
+                  name="user"
+                  rules={[
+                    {
+                      required: true,
+                      message: '请输入内容',
+                    },
+                  ]}
+                >
                   <Input placeholder='请输入排课计划名称' onChange={event => setFirstName(event.target.value)}
+
                     value={firstName} />
                 </Form.Item>
-                <Form.Item label="学期">
+                <Form.Item label="学期"
+
+                >
                   <Dropdown overlay={menu}>
                     <Button>
                       <Space>
@@ -241,54 +361,106 @@ export default function ModalBox(props) {
                       </Space>
                     </Button>
                   </Dropdown>
-
                 </Form.Item>
-                <Form.Item label="周上课天数">
-                  <Input placeholder='请输入周上课数' onChange={event => setweekName(event.target.value)}
-                    value={weekName} />
+                {/* placeholder='请输入周上课数'  */}
+                <Form.Item label="周上课天数"
+                  name="week"
+                  rules={[
+                    {
+                      required: true,
+                      max: 1,
+                      pattern: new RegExp(/^[1-9]\d*$/, "g"),
+                      message: '只能输入数字or不能大于3',
+                    },{
+                      max: 1,
+                      message: '不能大于7',
+                    },
+                  ]}
+                >
+                  <Input
+                    value={weekName}
+                    onChange={event => setweekName(event.target.value)}
+                  />
                 </Form.Item>
                 <div>
                   <Form.Item label="上午课程数"
+                    name='morning'
                     rules={[
-                      {
+                      { 
                         required: true,
+                        pattern: new RegExp(/^[1-9]\d*$/, "g"),
+                        message: '只能输入数字'
                       },
                       {
-                        type: 'Number',
-                        warningOnly: false,
-
-                      },
+                        max: 1,
+                        message: '不能大于4',
+                      }
                     ]} >
                     <Input placeholder='请输入上午课程数'
                       onChange={event => setInMorning(event.target.value)}
                       value={InMorning} />
                   </Form.Item>
-                  <Form.Item label="下午课程数">
+                  <Form.Item label="下午课程数"
+                    name='afternoon'
+                    rules={[
+                      {
+                        required: true,
+                        max: 1,
+                        pattern: new RegExp(/^[1-9]\d*$/, "g"),
+                        message: '只能输入数字or不能大于4',
+                      },{
+                        max: 1,
+                        message: '不能大于4',
+                      },{
+                      }
+                    
+                    ]}>
                     <Input placeholder='请输入下午课程数'
                       onChange={event => setInAfternoon(event.target.value)}
                       value={InAfternoon} />
                   </Form.Item>
-                  <Form.Item label="晚上课程数">
+                  <Form.Item label="晚上课程数"
+                    name='evening'
+                    rules={[
+                      {
+                        required: true,
+                        max: 1,
+                        pattern: new RegExp(/^[1-9]\d*$/, "g"),
+                        message: '只能输入数字or不能大于3',
+                      },{
+                        max: 1,
+                        message: '不能大于4',
+                      },
+                     
+                    ]}>
                     <Input placeholder='请输入晚上课程数'
                       onChange={event => setEvening(event.target.value)}
                       value={Evening} />
                   </Form.Item>
                 </div>
-                <Form.Item label="参排年级">
-                  <Checkbox.Group
+                <Form.Item label="参排年级" name='grade'
                   
+                  rules={[
+                    {
+                     
+                      required: true,
+                      message: '请输入内容',
+                    },
+                  ]} >
+                  <Checkbox.Group
                     style={{
                       width: '100%',
                       display: show ? 'block' : 'none'
                     }}
                     onChange={multi}
                   >
-                    <Row>
+                    <Row >
                       {title.map((item, index) => {
-                        return <Col span={8} key={index} >
+                        return <Col span={8} key={index}
+                        >
                           <Checkbox
                             value={item.gradeId}
-                            key={index} >{item.gradeName}</Checkbox>
+                          >{item.gradeName}</Checkbox>
                         </Col>
                       })
                       }
@@ -313,17 +485,18 @@ export default function ModalBox(props) {
               </Space>
               {/* 表单内容  */}
               <Table
+                scroll={{ y: 440 }}
                 rowSelection={{
                   type: selectionType,
                   ...rowSelection,
                 }}
+                pagination={false}
                 columns={columns} dataSource={data} />
             </React.Fragment>
           </TabPane>
         </Tabs>
       </div>
     </div>
-
   )
   //rules 内容区
   const cityData = {
@@ -353,11 +526,21 @@ export default function ModalBox(props) {
       {/*下面搜索框 */}
       <Search onSearch={onSearch} enterButton style={{ marginTop: '40px', marginLeft: '-120px', width: '300px' }} />
       <Table
-                rowSelection={{
-                  type: selectionType,
-                  ...rowSelection,
-                }}
-                columns={columns} dataSource={data} />
+        scroll={{ y: 280 }}
+        pagination={false}
+        rowSelection={{
+          type: selectionType,
+          ...rowSelection,
+        }}
+        columns={columns} dataSource={anfin} />
+      {/* 分页器 */}
+      <Pagination
+        onChange={onEscCan}
+        total={total}
+        showSizeChanger
+        showQuickJumper
+        showTotal={(total) => `Total ${total} items`}
+      />
     </div>
   )
   //Arrangement内容区
@@ -378,11 +561,11 @@ export default function ModalBox(props) {
         {/*下面搜索框 */}
         <Search onSearch={onSearch} enterButton style={{ marginTop: '40px', marginLeft: '-120px', width: '300px' }} />
         <Table
-                rowSelection={{
-                  type: selectionType,
-                  ...rowSelection,
-                }}
-                columns={columns} dataSource={data} />
+          rowSelection={{
+            type: selectionType,
+            ...rowSelection,
+          }}
+          columns={columns} dataSource={data} />
       </div>
     </div>
   )
@@ -390,11 +573,11 @@ export default function ModalBox(props) {
   const Automatic = (
     <div style={{ height: '70vh', marginTop: '30px' }}>
       <Table
-                rowSelection={{
-                  type: selectionType,
-                  ...rowSelection,
-                }}
-                columns={columns} dataSource={data} />
+        rowSelection={{
+          type: selectionType,
+          ...rowSelection,
+        }}
+        columns={columns} dataSource={data} />
     </div>
   )
   const done = (
@@ -424,9 +607,9 @@ export default function ModalBox(props) {
       content: done,
     },
   ];
+
   return (
     <>
-
       <Steps current={current} size="small">
         {steps.map((item) => (
           <Step key={item.title} title={item.title} />

@@ -162,6 +162,7 @@ const Plan = () => {
                 showQuickJumper
                 showTotal={(total) => `Total ${total} items`}
             />
+            
             <Modal title="Basic Modal" visible={handleModal} width={1200} footer={null} onCancel={handleClose} style={{ marginLeft: '200px' }}
             >
                 <ModalBox sethandleModal={sethandleModal} />
